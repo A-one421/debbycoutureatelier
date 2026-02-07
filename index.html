@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en" style="height: auto; min-height: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debby Couture Atelier | Luxury Women's Fashion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Add Email.js SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        // Initialize Email.js with your PUBLIC KEY
+        (function() {
+            emailjs.init("vW0VXl5PsbOQnRic2"); // This is your public key
+        })();
+        
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            400: '#D4AF37',
+                            500: '#C5A028',
+                            600: '#B49020',
+                        },
+                        dark: {
+                            900: '#0a0a0a',
+                            800: '#121212',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    animation: {
+                        'slide-in-left': 'slideInLeft 1s ease-out',
+                        'slide-in-right': 'slideInRight 1s ease-out',
+                        'slide-up': 'slideUp 1s ease-out',
+                        'slide-down': 'slideDown 1s ease-out',
+                        'pop': 'pop 0.5s ease-out',
+                        'fade-in': 'fadeIn 0.8s ease-out',
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+                        'bounce-slow': 'bounceSlow 2s infinite',
+                        'shimmer': 'shimmer 2s infinite',
+                        'drop-in': 'dropIn 0.8s ease-out',
+                        'scale-up': 'scaleUp 0.6s ease-out',
+                        'rotate-in': 'rotateIn 0.8s ease-out',
+                        'typewriter': 'typewriter 3s steps(20) 1s 1 normal forwards',
+                        'blink': 'blink 0.7s infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        html, body {
+            height: auto;
+            min-height: 100%;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Animation Keyframes */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideInLeft {
+            from { transform: translateX(-100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes pop {
+            0% { transform: scale(0.8); opacity: 0; }
+            70% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(212, 175, 55, 0.8); }
+        }
+        
+        @keyframes bounceSlow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        @keyframes dropIn {
+            0% { transform: translateY(-100px) rotate(-5deg); opacity: 0; }
+            70% { transform: translateY(10px) rotate(2deg); }
+            100% { transform: translateY(0) rotate(0); opacity: 1; }
+        }
+        
+        @keyframes scaleUp {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes rotateIn {
+            0% { transform: rotate(-10deg) scale(0.5); opacity: 0; }
+            100% { transform: rotate(0) scale(1); opacity: 1; }
+        }
+        
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        @keyframes formSlideIn {
+            0% { transform: translateX(50px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes buttonGlow {
+            0%, 100% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.5); }
+            50% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.8); }
+        }
+        
+        @keyframes imagePopUp {
+            0% { transform: scale(0.8); opacity: 0; }
+            70% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        /* Preloader Styles */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease-out;
+        }
+        #preloader.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loader-text {
+            font-size: 2.5rem;
+            letter-spacing: 0.2em;
+            animation: shimmer 2s infinite;
+            background: linear-gradient(90deg, #000, #D4AF37, #000);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .loader-bar {
+            width: 200px;
+            height: 2px;
+            background: rgba(212, 175, 55, 0.2);
+            position: relative;
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+        .loader-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #D4AF37;
+            animation: loading 1.5s ease-in-out infinite;
+        }
+        @keyframes loading {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Toast notification styles */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            z-index: 10000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            border-left: 4px solid #2f855a;
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, #f56565, #c53030);
+            border-left: 4px solid #9b2c2c;
+        }
+
+        .toast.info {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            border-left: 4px solid #2c5282;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Hero Slider Styles - Clean Version */
+        .hero-slider {
+            position: relative;
+            height: 600px;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        @media (min-width: 768px) {
+            .hero-slider {
+                height: 700px;
+            }
+        }
+        
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            z-index: 1;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+        
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.1);
+            transition: transform 8s ease-out;
+        }
+        
+        .slide.active img {
+            transform: scale(1);
+        }
+        
+        .slider-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            z-index: 5;
+            padding: 0 20px;
+        }
+        
+        .slide-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 3;
+        }
+        
+        /* Animated text styles */
+        .animate-slide-left {
+            animation: slideInLeft 1.2s ease-out;
+        }
+        
+        .animate-slide-right {
+            animation: slideInRight 1.2s ease-out;
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 1.2s ease-out;
+        }
+        
+        .animate-pop {
+            animation: pop 0.8s ease-out;
+        }
+        
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .animate-drop {
+            animation: dropIn 1s ease-out;
+        }
+        
+        .animate-scale-up {
+            animation: scaleUp 0.8s ease-out;
+        }
+        
+        .animate-rotate-in {
+            animation: rotateIn 1s ease-out;
+        }
+        
+        /* Updated Typewriter without blinking cursor */
+        .typewriter-text {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typewriter 3s steps(20) 1s 1 normal forwards;
+            width: 0;
+            display: inline-block;
+        }
+        
+        /* Form animation */
+        .animate-form {
+            animation: formSlideIn 0.8s ease-out;
+        }
+        
+        /* Button glow animation */
+        .button-glow:hover {
+            animation: buttonGlow 1.5s infinite;
+        }
+        
+        /* Image pop-up animation */
+        .animate-pop-up {
+            animation: imagePopUp 1s ease-out;
+        }
+        
+        /* Observer animation classes - UPDATED for faster loading */
+        .observer-hidden {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+            will-change: transform, opacity; /* Optimize for animations */
+        }
+        
+        .observer-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Pre-load sections that are visible on load */
+        .section-preload {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+        
+        /* Staggered animation delay */
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+        .delay-600 { animation-delay: 0.6s; }
+        .delay-700 { animation-delay: 0.7s; }
+        .delay-800 { animation-delay: 0.8s; }
+        .delay-900 { animation-delay: 0.9s; }
+        .delay-1000 { animation-delay: 1s; }
+        
+        /* Custom button styles */
+        .btn-outline-white {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-white:hover {
+            background: white;
+            color: black;
+        }
+        
+        .btn-solid-white {
+            background: white;
+            color: black;
+            border: 2px solid white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-solid-white:hover {
+            background: #D4AF37;
+            border-color: #D4AF37;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-white text-dark-900 font-sans antialiased" style="height: auto; min-height: 100%;">
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="text-center">
+            <h1 class="font-serif text-white loader-text">DEBBY</h1>
+            <p class="text-gold-400 text-xs tracking-[0.3em] uppercase mt-2">Couture Atelier</p>
+            <div class="loader-bar"></div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer"></div>
+
+    <!-- Landing Page Content -->
+    <div id="landing-content" class="fade-in">
+        <!-- Hero Section - Clean Auto-Rotating Slider -->
+        <div class="hero-slider">
+            <div class="slider-container">
+                <!-- Slide 1 -->
+                <div class="slide">
+                    <img src="pictures/img1.jpg" alt="Fashion Model 1">
+                </div>
+                
+                <!-- Slide 2 -->
+                <div class="slide">
+                    <img src="pictures/img2.jpg" alt="Fashion Model 2">
+                </div>
+                
+                <!-- Slide 3 -->
+                <div class="slide">
+                    <img src="pictures/img3.jpg" alt="Fashion Model 3">
+                </div>
+                
+                <!-- Slide 4 -->
+                <div class="slide">
+                    <img src="pictures/img5.jpg" alt="Fashion Model 4">
+                </div>
+                
+                <!-- Slide 5 -->
+                <div class="slide">
+                    <img src="pictures/img6.jpg" alt="Fashion Model 5">
+                </div>
+                
+                <!-- Overlay -->
+                <div class="slide-overlay"></div>
+                
+                <!-- Slider Content (Text & Buttons) -->
+                <div class="slider-content">
+                    <div class="w-full max-w-4xl px-4">
+                        <h2 class="text-sm md:text-base uppercase tracking-[0.3em] mb-6 md:mb-4 text-gold-400 font-semibold animate-slide-left">
+                            For culture and class
+                        </h2>
+                        
+                        <h1 class="font-serif text-4xl sm:text-5xl md:text-7xl lg:text-8xl mb-8 md:mb-12 leading-tight">
+                            <span class="block mb-2 animate-slide-right delay-100">Individuality</span>
+                            <span class="italic text-gold-400 block mt-2 typewriter-text">Over trends</span>
+                        </h1>
+                        
+                        <!-- Centered buttons container - Updated with 2 buttons -->
+                        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-6">
+                            <a href="app.html" class="px-6 py-3 btn-solid-white font-medium tracking-wider min-w-[160px] text-center animate-pop delay-300">
+                                EXPLORE COLLECTION
+                            </a>
+                            <a href="bespoke.html" class="px-6 py-3 btn-outline-white font-medium tracking-wider min-w-[160px] text-center animate-pop delay-400">
+                                BESPOKE & CUSTOM
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- What You Get Section -->
+        <div class="bg-black text-white py-16 border-b border-gray-800 observer-hidden" id="experience-section">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="font-serif text-3xl md:text-4xl mb-4 animate-slide-up">The Debby Experience</h2>
+                    <div class="w-24 h-1 bg-gold-400 mx-auto animate-scale-up delay-200"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="text-center p-6 border border-gray-800 hover:border-gold-400 transition-colors animate-slide-up delay-300 hover:animate-float">
+                        <i data-lucide="ruler" class="h-10 w-10 mx-auto mb-4 text-gold-400 animate-bounce-slow"></i>
+                        <h3 class="text-lg font-serif mb-3">Luxury grade tailoring</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">Finest fabrics from around the world </p>
+                    </div>
+                    <div class="text-center p-6 border border-gray-800 hover:border-gold-400 transition-colors animate-slide-up delay-400 hover:animate-float">
+                        <i data-lucide="truck" class="h-10 w-10 mx-auto mb-4 text-gold-400 animate-bounce-slow delay-100"></i>
+                        <h3 class="text-lg font-serif mb-3">Global shipping </h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">Fast delivery Nationwide  </p>
+                    </div>
+                    
+                    <div class="text-center p-6 border border-gray-800 hover:border-gold-400 transition-colors animate-slide-up delay-500 hover:animate-float">
+                        <i data-lucide="award" class="h-10 w-10 mx-auto mb-4 text-gold-400 animate-bounce-slow delay-200"></i>
+                        <h3 class="text-lg font-serif mb-3">Effortless comfort and fit </h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">Satisfication Guarantee</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Us Section -->
+        <div id="about" class="py-20 bg-white observer-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div class="order-2 lg:order-1 animate-slide-right">
+                        <h2 class="font-serif text-4xl md:text-5xl mb-6">About Debby Couture Atelier</h2>
+                        <div class="w-24 h-1 bg-gold-400 mb-8 animate-scale-up delay-100"></div>
+                        <p class="text-gray-600 leading-relaxed mb-6 animate-slide-left delay-200">
+                            We are fashion brand dedicated to creating luxury and premium classic outfits for women who appreciate elegance and quality.
+                        </p>
+                        <p class="text-gray-600 leading-relaxed mb-6 animate-slide-left delay-300"> 
+                            Our designs blend the richness of local fabrics with refined foreign fabrics, delivering timeless pieces that are stylish, comfortable, and well-tailored.
+                        </p>
+                        <p class="text-gray-600 leading-relaxed mb-8 animate-slide-left delay-400"> 
+                            Every outfit is thoughtfully crafted to celebrate confidence, culture, and modern femininity
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="app.html?view=shop" class="px-8 py-3 bg-black text-white font-medium tracking-widest hover:bg-gold-500 transition-colors text-center animate-pop delay-500">
+                                SHOP THE COLLECTION
+                            </a>
+                            <a href="bespoke.html" class="px-8 py-3 border border-black text-black font-medium tracking-widest hover:bg-black hover:text-white transition-colors text-center animate-pop delay-600">
+                                BESPOKE SERVICES
+                            </a>
+                        </div>
+                    </div>
+                    <div class="order-1 lg:order-2">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="aspect-[3/4] overflow-hidden observer-hidden">
+                                <img src="pictures/img5.jpg" alt="Fashion Atelier" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                            </div>
+                            <div class="aspect-[3/4] overflow-hidden mt-12 observer-hidden">
+                                <img src="pictures/img3.jpg" alt="Luxury Fashion" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Categories -->
+        <div class="py-20 bg-gray-50 observer-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="font-serif text-4xl mb-4 animate-slide-up">Curated Collections</h2>
+                    <div class="w-24 h-1 bg-gold-400 mx-auto animate-scale-up delay-200"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="group relative h-[500px] overflow-hidden cursor-pointer animate-slide-up delay-300">
+                        <a href="app.html?view=shop">
+                            <img src="pictures/img2.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Evening Wear">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-80"></div>
+                            <div class="absolute bottom-8 left-8 text-white">
+                                <h3 class="font-serif text-3xl mb-2">Evening Luxe</h3>
+                                <p class="text-gray-300 mb-4">Elegant dresses for special nights</p>
+                                <span class="inline-block border-b border-gold-400 pb-1 text-gold-400 uppercase tracking-widest text-xs animate-pulse-glow">Explore</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="group relative h-[500px] overflow-hidden cursor-pointer animate-slide-up delay-400">
+                        <a href="app.html?view=shop">
+                            <img src="pictures/img6.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Streetwear">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-80"></div>
+                            <div class="absolute bottom-8 left-8 text-white">
+                                <h3 class="font-serif text-3xl mb-2">Urban Minimal</h3>
+                                <p class="text-gray-300 mb-4">Contemporary street style</p>
+                                <span class="inline-block border-b border-gold-400 pb-1 text-gold-400 uppercase tracking-widest text-xs animate-pulse-glow">Explore</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="group relative h-[500px] overflow-hidden cursor-pointer md:col-span-2 lg:col-span-1 animate-slide-up delay-500">
+                        <a href="app.html">
+                            <img src="pictures/img6.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Accessories">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-80"></div>
+                            <div class="absolute bottom-8 left-8 text-white">
+                                <h3 class="font-serif text-3xl mb-2">Gold & Glitz</h3>
+                                <p class="text-gray-300 mb-4">Premium accessories</p>
+                                <span class="inline-block border-b border-gold-400 pb-1 text-gold-400 uppercase tracking-widest text-xs animate-pulse-glow">Explore</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form Section -->
+        <div id="contact" class="py-20 bg-white observer-hidden">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="font-serif text-4xl mb-4 animate-slide-down">Get In Touch</h2>
+                    <div class="w-24 h-1 bg-gold-400 mx-auto mb-6 animate-scale-up delay-200"></div>
+                    <p class="text-gray-600 animate-fade-in delay-300">Have a question or need styling advice? Our team is here to help.</p>
+                </div>
+                
+                <!-- Contact Info Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 flex items-center gap-4 animate-form delay-100 hover:animate-float">
+                        <div class="w-12 h-12 rounded-full bg-gold-400/20 flex items-center justify-center flex-shrink-0 animate-rotate-in">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-gold-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-black font-bold text-sm mb-1">Visit Our Boutique</p>
+                            <p class="text-gray-600 text-xs">Aromokeye Shopping complex, Surulere street, Ido Ekiti</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 flex items-center gap-4 animate-form delay-200 hover:animate-float">
+                        <div class="w-12 h-12 rounded-full bg-gold-400/20 flex items-center justify-center flex-shrink-0 animate-rotate-in delay-100">
+                            <i data-lucide="phone" class="w-5 h-5 text-gold-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-black font-bold text-sm mb-1">Call Us</p>
+                            <p class="text-gray-600 text-xs">+234 806 616 3249</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 flex items-center gap-4 animate-form delay-300 hover:animate-float">
+                        <div class="w-12 h-12 rounded-full bg-gold-400/20 flex items-center justify-center flex-shrink-0 animate-rotate-in delay-200">
+                            <i data-lucide="mail" class="w-5 h-5 text-gold-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-black font-bold text-sm mb-3">Email Us</p>
+                            <p class="text-gray-600 text-xs">debbyhautecourture23@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 flex items-center gap-4 animate-form delay-400 hover:animate-float">
+                        <div class="w-12 h-12 rounded-full bg-gold-400/20 flex items-center justify-center flex-shrink-0 animate-rotate-in delay-300">
+                            <i data-lucide="message-circle" class="w-5 h-5 text-gold-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-black font-bold text-sm mb-3">Send us Dm</p>
+                            <p class="text-gray-600 text-xs">+ 234 806 616 3249 </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <form id="contact-form" class="space-y-6 animate-form delay-500">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="animate-slide-right delay-100">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                            <input type="text" id="full_name" name="full_name" class="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all hover:scale-105" placeholder="Your Name" required>
+                        </div>
+                        <div class="animate-slide-left delay-200">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                            <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all hover:scale-105 text-lg" placeholder="youremail@example.com" required>
+                        </div>
+                    </div>
+                    <div class="animate-slide-right delay-300">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number (Optional)</label>
+                        <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all hover:scale-105" placeholder="+234 806 616 3249">
+                    </div>
+                    <div class="animate-slide-left delay-400">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Subject *</label>
+                        <select id="subject" name="subject" class="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all hover:scale-105" required>
+                            <option value="">Select a subject</option>
+                            <option>General Inquiry</option>
+                            <option>Order Support</option>
+                            <option>Styling Consultation</option>
+                            <option>Custom Orders</option>
+                            <option>Press & Media</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="animate-slide-right delay-500">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Message *</label>
+                        <textarea rows="5" id="message" name="message" class="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all resize-none hover:scale-105" placeholder="Tell us how we can help you..." required></textarea>
+                    </div>
+                    <button type="submit" id="submit-btn" class="w-full bg-black text-white py-4 font-bold uppercase tracking-widest hover:bg-gold-500 transition-colors shadow-lg flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed animate-pop delay-600">
+                        <span id="btn-text">Send Message</span>
+                        <div id="btn-spinner" class="hidden ml-2">
+                            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </div>
+                    </button>
+                    <p class="text-xs text-gray-500 text-center animate-fade-in delay-700">* Required fields</p>
+                </form>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-black text-white pt-16 pb-8 observer-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                    <div class="animate-slide-left">
+                        <span class="font-serif text-2xl font-bold tracking-tighter block mb-6">DEBBY <span class="text-gold-500">CA</span></span>
+                        <p class="text-gray-400 text-sm leading-relaxed">Redefining luxury fashion for the modern woman. Quality, sustainability, and style in every stitch.</p>
+                    </div>
+                    <div class="animate-slide-up delay-100">
+                        <h4 class="text-lg font-serif mb-6">Shop</h4>
+                        <ul class="space-y-3 text-gray-400 text-sm">
+                            <li><a href="app.html" class="hover:text-gold-400 transition-colors">New Arrivals</a></li>
+                            <li><a href="app.html" class="hover:text-gold-400 transition-colors">Dresses</a></li>
+                            <li><a href="app.html" class="hover:text-gold-400 transition-colors">Evening Wear</a></li>
+                            <li><a href="app.html" class="hover:text-gold-400 transition-colors">Accessories</a></li>
+                        </ul>
+                    </div>
+                    <div class="animate-slide-up delay-200">
+                        <h4 class="text-lg font-serif mb-6">Services</h4>
+                        <ul class="space-y-3 text-gray-400 text-sm">
+                            <li><a href="bespoke.html" class="hover:text-gold-400 transition-colors">Bespoke Tailoring</a></li>
+                            <li><a href="bespoke.html" class="hover:text-gold-400 transition-colors">Custom Orders</a></li>
+                            <li><a href="bespoke.html" class="hover:text-gold-400 transition-colors">Consultations</a></li>
+                            <li><a href="app.html" class="hover:text-gold-400 transition-colors">Ready-to-Wear</a></li>
+                        </ul>
+                    </div>
+                    <div class="animate-slide-right delay-300">
+                        <h4 class="text-lg font-serif mb-6">Stay Connected</h4>
+                        <!-- Updated Stay Connected section with active state styling -->
+                        <div class="flex border-b border-gray-700 pb-2 mb-6 group animate-pulse-glow">
+                            <input type="email" placeholder="Your email address" 
+                                   class="bg-transparent border-none focus:ring-0 w-full text-sm placeholder-gray-500 
+                                          focus:placeholder-transparent focus:outline-none focus:border-gold-400 
+                                          focus:border-b-2 transition-all duration-300">
+                            <button class="text-gold-400 uppercase text-xs font-bold tracking-widest 
+                                          hover:text-gold-300 transition-colors">
+                                Join
+                            </button>
+                        </div>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gold-500 transition-colors animate-bounce-slow">
+                                <i data-lucide="instagram" class="h-4 w-4"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gold-500 transition-colors animate-bounce-slow delay-100">
+                                <i data-lucide="facebook" class="h-4 w-4"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gold-500 transition-colors animate-bounce-slow delay-200">
+                                <i data-lucide="twitter" class="h-4 w-4"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 animate-fade-in delay-400">
+                    <p>&copy; 2026 Debby Couture Atelier. All rights reserved.</p>
+                    <div class="flex space-x-6 mt-4 md:mt-0">
+                        <a href="#" class="hover:text-white">Privacy Policy</a>
+                        <a href="#" class="hover:text-white">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Preloader
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('preloader').classList.add('fade-out');
+                setTimeout(function() {
+                    document.getElementById('preloader').style.display = 'none';
+                    // Initialize animations after preloader is gone
+                    initAnimations();
+                }, 500);
+            }, 2000);
+        });
+
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Toast notification function
+        function showToast(message, type = 'success') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <div class="flex items-center">
+                    ${type === 'success' ? 
+                        '<i data-lucide="check-circle" class="w-5 w-5 mr-2"></i>' :
+                        type === 'error' ?
+                        '<i data-lucide="alert-circle" class="w-5 w-5 mr-2"></i>' :
+                        '<i data-lucide="info" class="w-5 w-5 mr-2"></i>'
+                    }
+                    <span>${message}</span>
+                </div>
+            `;
+            toastContainer.appendChild(toast);
+            
+            // Show toast
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // Remove toast after 5 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toastContainer.removeChild(toast);
+                }, 300);
+            }, 5000);
+            
+            // Reinitialize icons for the new toast
+            lucide.createIcons();
+        }
+
+        // Contact form submission handler
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+            const btnSpinner = document.getElementById('btn-spinner');
+            const form = e.target;
+            
+            // Form validation
+            if (!form.checkValidity()) {
+                showToast('Please fill in all required fields correctly.', 'error');
+                return;
+            }
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            btnText.textContent = 'Sending...';
+            btnSpinner.classList.remove('hidden');
+            
+            // Get current date for the template
+            const currentDate = new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            // Prepare template parameters
+            const templateParams = {
+                full_name: document.getElementById('full_name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value || 'Not provided',
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value,
+                date: currentDate
+            };
+            
+            // Send email using Email.js to ADMIN
+            emailjs.send('service_q6a199l', 'template_udyis9f', templateParams)
+                .then(function(response) {
+                    console.log('ADMIN EMAIL SUCCESS!', response.status, response.text);
+                    
+                    // Show success message with animation
+                    showToast('Message sent successfully! We\'ll get back to you within 24-48 hours.', 'success');
+                    
+                    // Add celebration animation to the form
+                    const form = document.getElementById('contact-form');
+                    form.classList.add('animate-pop');
+                    setTimeout(() => {
+                        form.classList.remove('animate-pop');
+                    }, 1000);
+                    
+                    // Reset form
+                    document.getElementById('contact-form').reset();
+                    
+                    // Reset button state
+                    setTimeout(() => {
+                        submitBtn.disabled = false;
+                        btnText.textContent = 'Send Message';
+                        btnSpinner.classList.add('hidden');
+                    }, 1500);
+                    
+                    // Scroll to top of contact section for better UX
+                    setTimeout(() => {
+                        document.getElementById('contact').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 500);
+                })
+                .catch(function(error) {
+                    console.log('EMAIL FAILED...', error);
+                    
+                    // Show error message
+                    showToast('Failed to send message. Please try again or contact us directly.', 'error');
+                    
+                    // Add shake animation to the form
+                    const form = document.getElementById('contact-form');
+                    form.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        form.style.animation = '';
+                    }, 500);
+                    
+                    // Reset button state
+                    submitBtn.disabled = false;
+                    btnText.textContent = 'Send Message';
+                    btnSpinner.classList.add('hidden');
+                });
+        });
+
+        // Hero Slider Functionality - Clean Auto-Rotating Only
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.slide');
+            let currentSlide = 0;
+            let slideInterval;
+            const slideDuration = 3000; // 4 seconds per slide
+            
+            // Function to show a specific slide
+            function showSlide(index) {
+                // Reset all slides
+                slides.forEach(slide => {
+                    slide.classList.remove('active');
+                });
+                
+                // Set current slide
+                currentSlide = index;
+                
+                // Show current slide
+                slides[currentSlide].classList.add('active');
+            }
+            
+            // Function to go to next slide
+            function nextSlide() {
+                let nextIndex = currentSlide + 1;
+                if (nextIndex >= slides.length) {
+                    nextIndex = 0;
+                }
+                showSlide(nextIndex);
+            }
+            
+            // Start automatic sliding with random start
+            function startSlider() {
+                // Start with a random slide
+                const randomStartIndex = Math.floor(Math.random() * slides.length);
+                showSlide(randomStartIndex);
+                
+                // Start automatic rotation
+                slideInterval = setInterval(nextSlide, slideDuration);
+            }
+            
+            // Initialize slider
+            startSlider();
+            
+            // Reinitialize icons after slider is set up
+            lucide.createIcons();
+        });
+
+        // Initialize scroll animations
+        function initAnimations() {
+            // NEW: Pre-load sections that are immediately visible after hero
+            const sections = document.querySelectorAll('.observer-hidden');
+            
+            // Immediately load sections that should be visible
+            setTimeout(() => {
+                // Make experience section visible immediately after hero
+                const experienceSection = document.getElementById('experience-section');
+                if (experienceSection) {
+                    experienceSection.classList.add('observer-visible');
+                }
+                
+                // Load next 1-2 sections preemptively
+                const aboutSection = document.getElementById('about');
+                if (aboutSection && window.innerHeight > 500) {
+                    aboutSection.classList.add('observer-visible');
+                }
+            }, 100);
+            
+            // Improved Intersection Observer with larger root margin for earlier loading
+            const observerOptions = {
+                threshold: 0.05, // Lower threshold for earlier detection
+                rootMargin: '0px 0px -100px 0px' // Load sections 100px before they enter viewport
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('observer-visible');
+                        
+                        // If it's an image in the About section, add pop-up animation
+                        if (entry.target.classList.contains('observer-hidden') && 
+                            entry.target.closest('#about') && 
+                            entry.target.querySelector('img')) {
+                            entry.target.classList.add('animate-pop-up');
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all sections with the observer-hidden class
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Add hover animations to buttons
+            document.querySelectorAll('a, button').forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05)';
+                });
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+
+            // Add animation to form inputs on focus
+            document.querySelectorAll('input, textarea, select').forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('animate-pop');
+                    setTimeout(() => {
+                        this.parentElement.classList.remove('animate-pop');
+                    }, 500);
+                });
+            });
+            
+            // NEW: Pre-load images when user is near sections
+            function preloadNearbySections() {
+                const scrollPosition = window.scrollY + window.innerHeight;
+                const sections = document.querySelectorAll('.observer-hidden');
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    // If section is within 500px of viewport, pre-load it
+                    if (sectionTop < scrollPosition + 500) {
+                        section.classList.add('observer-visible');
+                    }
+                });
+            }
+            
+            // Listen for scroll to pre-load upcoming sections
+            let scrollTimer;
+            window.addEventListener('scroll', function() {
+                clearTimeout(scrollTimer);
+                scrollTimer = setTimeout(preloadNearbySections, 100);
+            });
+            
+            // Initial pre-load check
+            preloadNearbySections();
+        }
+
+        // Add a shake animation for form errors
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+            
+            @keyframes imagePopUp {
+                0% { transform: scale(0.8); opacity: 0; }
+                70% { transform: scale(1.05); opacity: 0.8; }
+                100% { transform: scale(1); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // NEW: Pre-load images on page load
+        window.addEventListener('load', function() {
+            // Force load all images in viewport and near viewport
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                if (img.complete) return;
+                
+                // Check if image is in or near viewport
+                const rect = img.getBoundingClientRect();
+                if (rect.top < window.innerHeight + 300) {
+                    // Load image immediately
+                    img.loading = 'eager';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en" style="height: auto; min-height: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debby Couture Atelier | Bespoke & Custom Orders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Add Email.js SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        // Initialize Email.js with your PUBLIC KEY
+        (function() {
+            emailjs.init("vW0VXl5PsbOQnRic2"); // This is your public key
+        })();
+        
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            400: '#D4AF37',
+                            500: '#C5A028',
+                            600: '#B49020',
+                        },
+                        dark: {
+                            900: '#0a0a0a',
+                            800: '#121212',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html, body {
+            height: auto;
+            min-height: 100%;
+            scroll-behavior: smooth;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Text Animation Effects */
+        .text-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: textReveal 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        
+        .text-reveal.delay-1 { animation-delay: 0.1s; }
+        .text-reveal.delay-2 { animation-delay: 0.2s; }
+        .text-reveal.delay-3 { animation-delay: 0.3s; }
+        .text-reveal.delay-4 { animation-delay: 0.4s; }
+        .text-reveal.delay-5 { animation-delay: 0.5s; }
+        
+        @keyframes textReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Pop-up Animation for Bespoke Journey Images */
+        .image-popup {
+            opacity: 0;
+            transform: scale(0.8) translateY(50px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .image-popup.visible {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+        
+        /* Float Animation */
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .gold-glow {
+            animation: goldGlow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes goldGlow {
+            from { text-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
+            to { text-shadow: 0 0 20px rgba(212, 175, 55, 0.6); }
+        }
+        
+        /* Toast notification styles */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            z-index: 10000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            border-left: 4px solid #2f855a;
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, #f56565, #c53030);
+            border-left: 4px solid #9b2c2c;
+        }
+
+        .toast.info {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            border-left: 4px solid #2c5282;
+        }
+        
+        /* Elegant border animations */
+        .elegant-border {
+            position: relative;
+        }
+        
+        .elegant-border::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #D4AF37;
+            transition: width 0.3s ease;
+        }
+        
+        .elegant-border:focus-within::after {
+            width: 100%;
+        }
+        
+        /* Card hover effects */
+        .elegant-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e5e7eb;
+        }
+        
+        .elegant-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            border-color: #D4AF37;
+        }
+        
+        /* Subtle background pattern */
+        .elegant-pattern {
+            background-image: 
+                radial-gradient(circle at 1px 1px, rgba(212, 175, 55, 0.05) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+        
+        /* Luxury underline animation */
+        .luxury-underline {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .luxury-underline::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #D4AF37, #B49020);
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .luxury-underline:hover::after {
+            width: 100%;
+        }
+        
+        /* Time display animation */
+        .time-display {
+            font-feature-settings: "tnum";
+            font-variant-numeric: tabular-nums;
+        }
+        
+        /* Time estimate circle */
+        .time-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 0 auto;
+        }
+        
+        .time-circle::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+        
+        /* Time-based price indicator */
+        .time-price-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 1.1rem;
+            margin-top: 12px;
+        }
+        
+        .time-price-indicator .time {
+            color: #D4AF37;
+            font-weight: 600;
+        }
+        
+        .time-price-indicator .price {
+            color: #000;
+            font-weight: 700;
+        }
+        
+        /* Time slider animation */
+        .time-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(to right, #e5e7eb, #D4AF37);
+            outline: none;
+            margin: 30px 0;
+        }
+        
+        .time-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #D4AF37;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease;
+        }
+        
+        .time-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+        
+        .time-slider::-moz-range-thumb {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #D4AF37;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body class="bg-white text-dark-900 font-sans antialiased" style="height: auto; min-height: 100%;">
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer"></div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.location.href='index.html'">
+                    <span class="font-serif text-2xl font-bold tracking-tighter text-gray-900 text-reveal">DEBBY <span class="text-gold-500 text-sm align-top">CA</span></span>
+                </div>
+                <div class="flex items-center space-x-8">
+                    <button onclick="window.location.href='app.html'" class="text-gray-600 hover:text-gold-500 transition-colors text-sm font-medium tracking-wide text-reveal delay-1">
+                        READY-TO-WEAR
+                    </button>
+                    <button onclick="window.location.href='index.html'" class="text-gray-600 hover:text-gold-500 transition-colors text-sm font-medium tracking-wide text-reveal delay-2">
+                        HOME
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Bespoke Journey Section (Images Only with Pop-up Animation) - Starting directly from here -->
+        <div class="py-16 bg-gradient-to-b from-white to-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="font-serif text-4xl md:text-5xl mb-6 text-gray-900 text-reveal">The Bespoke Journey</h2>
+                    <div class="w-32 h-0.5 bg-gradient-to-r from-transparent via-gold-400 to-transparent mx-auto mb-6 text-reveal delay-1"></div>
+                </div>
+                
+                <!-- Image Grid with Pop-up Animation - Smaller and stylishly arranged -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto">
+                    <div class="image-popup group relative overflow-hidden rounded-xl shadow-lg" style="animation-delay: 0.1s">
+                        <div class="aspect-[4/5] overflow-hidden">
+                            <img src="pictures/haute1.jpg" alt="Precision Measurements" 
+                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        </div>
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                            <span class="text-xs font-medium text-gray-700 uppercase tracking-wider">Brand Pic</span>
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                            <p class="text-white text-sm font-light italic">Not for sale • Craftsmanship showcase</p>
+                        </div>
+                    </div>
+                    <div class="image-popup group relative overflow-hidden rounded-xl shadow-lg" style="animation-delay: 0.2s">
+                                                <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                            <span class="text-xs font-medium text-gray-700 uppercase tracking-wider">Brand Pic</span>
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                            <p class="text-white text-sm font-light italic">Not for sale • Design excellence</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Time-Based Pricing Section -->
+        <div id="time-pricing" class="py-20 bg-white elegant-pattern">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="font-serif text-4xl md:text-5xl mb-6 text-gray-900 text-reveal">Time-Based Consultation</h2>
+                    <div class="w-32 h-0.5 bg-gradient-to-r from-transparent via-gold-400 to-transparent mx-auto mb-6 text-reveal delay-1"></div>
+                    <p class="text-gray-600 max-w-2xl mx-auto text-lg text-reveal delay-2">
+                        Select your preferred consultation duration for personalized service.
+                    </p>
+                </div>
+                
+                <!-- Time Price Calculator -->
+                <div class="mb-16">
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12">
+                        <div class="text-center mb-12">
+                            <h3 class="font-serif text-3xl mb-4 text-gray-900 text-reveal">Estimate Your Cost</h3>
+                            <div class="w-24 h-0.5 bg-gold-400 mx-auto mb-6 text-reveal delay-1"></div>
+                        </div>
+                        
+                        <!-- Time Slider -->
+                        <div class="mb-12">
+                            <input type="range" min="15" max="180" value="60" step="10" class="time-slider" id="timeSlider">
+                            <div class="flex justify-between text-sm text-gray-500 mt-2">
+                                <span>15  mins</span>
+                                <span>30  mins</span>
+                                <span>45 mins</span>
+                                <span>60 mins</span>
+                                <span>90 mins</span>
+                                <span>120 mins</span>
+                                <span>180 mins</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Dynamic Time Display -->
+                        <div class="text-center mb-8">
+                            <div class="time-circle bg-gradient-to-br from-gold-50 to-gold-100 mb-6">
+                                <div class="text-center">
+                                    <div class="text-3xl font-serif font-bold text-gray-900 time-display" id="selectedTime">60</div>
+                                    <div class="text-sm text-gray-600 uppercase tracking-widest mt-1">minutes</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Adjusted time-price indicator with better alignment -->
+                            <div class="flex flex-col items-center mb-6">
+                                <div class="time-price-indicator">
+                                    <span class="time text-lg" id="timeDisplay">60 minutes</span>
+                                    <span class="text-xl mx-2">→</span>
+                                    <span class="price text-lg" id="priceDisplay">₦40,000</span>
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">
+                                    <i data-lucide="info" class="h-3 w-3 inline mr-1"></i>
+                                    Price includes consultation & design notes
+                                </div>
+                            </div>
+                            
+                            <div class="mb-8">
+                                <button onclick="selectTimeSlot()" class="px-12 py-4 bg-gradient-to-r from-gray-900 to-black text-white font-medium tracking-wide hover:from-gold-500 hover:to-gold-600 transition-all duration-300 text-lg">
+                                    SELECT TIME SLOT
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Booking Form -->
+                <div id="booking-form" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12">
+                    <div class="text-center mb-10">
+                        <h3 class="font-serif text-3xl mb-4 text-gray-900 text-reveal">Reserve Your Slot</h3>
+                        <div class="w-24 h-0.5 bg-gold-400 mx-auto mb-6 text-reveal delay-1"></div>
+                        <p class="text-gray-600 text-sm text-reveal delay-2">
+                            Complete to secure your appointment.
+                        </p>
+                    </div>
+                    
+                    <form id="bespoke-form" class="space-y-8">
+                        <!-- Personal Information -->
+                        <div class="space-y-6">
+                            <h4 class="font-serif text-lg text-gray-900 border-b pb-3 border-gray-100 text-reveal">Personal Information</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="elegant-border text-reveal delay-1">
+                                    <label class="block text-sm font-medium text-gray-700 mb-3">Full Name *</label>
+                                    <input type="text" id="bespoke_name" name="bespoke_name" class="w-full px-0 py-3 bg-transparent border-0 focus:ring-0 focus:outline-none text-gray-900 placeholder-gray-400" placeholder="Enter your full name" required>
+                                </div>
+                                <div class="elegant-border text-reveal delay-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-3">Email Address *</label>
+                                    <input type="email" id="bespoke_email" name="bespoke_email" class="w-full px-0 py-3 bg-transparent border-0 focus:ring-0 focus:outline-none text-gray-900 placeholder-gray-400" placeholder="your.email@example.com" required>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="elegant-border text-reveal delay-3">
+                                    <label class="block text-sm font-medium text-gray-700 mb-3">Phone Number *</label>
+                                    <input type="tel" id="bespoke_phone" name="bespoke_phone" class="w-full px-0 py-3 bg-transparent border-0 focus:ring-0 focus:outline-none text-gray-900 placeholder-gray-400" placeholder="+234 806 616 3249" required>
+                                </div>
+                                <div class="relative elegant-border text-reveal delay-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-3">Selected Duration *</label>
+                                    <select id="bespoke_type" name="bespoke_type" class="w-full px-0 py-3 bg-transparent border-0 focus:ring-0 focus:outline-none text-gray-900 appearance-none pr-8" required>
+                                        <option value="" class="text-gray-400">Select consultation duration</option>
+                                        <option value="15 minutes - ₦10,000" class="text-gray-900">15 minutes - ₦10,000</option>
+                                        <option value="30 minutes - ₦20,000" class="text-gray-900">30 minutes - ₦20,000</option>
+                                        <option value="45 minutes - ₦30,000" class="text-gray-900">45 minutes - ₦30,000</option>
+                                        <option value="60 minutes - ₦40,000" class="text-gray-900">60 minutes - ₦40,000</option>
+                                        <option value="75 minutes - ₦50,000" class="text-gray-900">75 minutes - ₦50,000</option>
+                                        <option value="90 minutes - ₦60,000" class="text-gray-900">90 minutes - ₦60,000</option>
+                                        <option value="105 minutes - ₦70,000" class="text-gray-900">105 minutes - ₦70,000</option>
+                                        <option value="120 minutes - ₦80,000" class="text-gray-900">120 minutes - ₦80,000</option>
+                                        <option value="135 minutes - ₦90,000" class="text-gray-900">135 minutes - ₦90,000</option>
+                                        <option value="150 minutes - ₦100,000" class="text-gray-900">150 minutes - ₦100,000</option>
+                                        <option value="165 minutes - ₦110,000" class="text-gray-900">165 minutes - ₦110,000</option>
+                                        <option value="180 minutes - ₦120,000" class="text-gray-900">180 minutes - ₦120,000</option>
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 top-8">
+                                        <i data-lucide="chevron-down" class="h-4 w-4"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Project Details -->
+                        <div class="space-y-6">
+                            <h4 class="font-serif text-lg text-gray-900 border-b pb-3 border-gray-100 text-reveal delay-2">Project Vision</h4>
+                            <div class="elegant-border text-reveal delay-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-3">Describe Your Vision *</label>
+                                <textarea rows="4" id="project_description" name="project_description" class="w-full px-0 py-3 bg-transparent border-0 focus:ring-0 focus:outline-none text-gray-900 placeholder-gray-400 resize-none" placeholder="Share your inspiration, occasion, and requirements..." required></textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Agreement -->
+                        <div class="space-y-6">
+                            <h4 class="font-serif text-lg text-gray-900 border-b pb-3 border-gray-100 text-reveal delay-3">Confirmation</h4>
+                            <div class="flex items-start space-x-3 text-reveal delay-4">
+                                <input type="checkbox" id="agree_terms" name="agree_terms" class="mt-1 h-4 w-4 text-gold-500 focus:ring-gold-500 border-gray-300 rounded" required>
+                                <label for="agree_terms" class="text-sm text-gray-600">
+                                    I confirm that I wish to book this consultation. *
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="pt-6">
+                            <button type="submit" id="bespoke-submit-btn" class="w-full group bg-gray-900 text-white py-4 font-medium tracking-wide hover:bg-gold-500 transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed text-reveal delay-5">
+                                <span id="bespoke-btn-text">SECURE TIME SLOT</span>
+                                <div id="bespoke-btn-spinner" class="hidden ml-2">
+                                    <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                </div>
+                            </button>
+                            <p class="text-xs text-gray-500 text-center mt-4 text-reveal delay-5">
+                                * Confirmation email sent within minutes
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Immediate Contact Section -->
+        <div class="bg-gradient-to-b from-white to-gray-50 py-20">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12 text-center">
+                    <div class="w-16 h-16 mx-auto mb-8 rounded-full bg-gold-50 flex items-center justify-center float-animation">
+                        <i data-lucide="message-circle" class="h-8 w-8 text-gold-400"></i>
+                    </div>
+                    <h3 class="font-serif text-3xl mb-6 text-gray-900 text-reveal">Need Instant Pricing?</h3>
+                    <p class="text-gray-600 mb-8 max-w-2xl mx-auto text-lg text-reveal delay-1">
+                        Connect with our atelier team for immediate pricing.
+                    </p>
+                    <button onclick="initiateWhatsApp()" class="group inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white font-medium tracking-wide hover:from-green-600 hover:to-green-700 transition-all duration-300 rounded text-reveal delay-2">
+                        <i data-lucide="message-circle" class="h-5 w-5"></i>
+                        <span>GET QUOTE ON WHATSAPP</span>
+                        <i data-lucide="arrow-right" class="h-4 w-4 group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                    <p class="text-sm text-gray-500 mt-6 text-reveal delay-3">
+                        Typically responds within 15 minutes
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-20 pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <span class="font-serif text-2xl font-bold tracking-tighter block mb-6 text-reveal">DEBBY <span class="text-gold-400 text-sm align-top">CA</span></span>
+                    <p class="text-gray-400 text-sm leading-relaxed font-light text-reveal delay-1">
+                        Craftsmanship meets personal expression.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-serif text-lg mb-6 text-gray-200 text-reveal">Navigation</h4>
+                    <ul class="space-y-4 text-gray-400 text-sm font-light">
+                        <li class="text-reveal delay-1"><a href="#time-pricing" class="hover:text-gold-400 transition-colors">Time-Based Pricing</a></li>
+                        <li class="text-reveal delay-2"><a href="app.html" class="hover:text-gold-400 transition-colors">Ready-to-Wear</a></li>
+                        <li class="text-reveal delay-3"><a href="index.html" class="hover:text-gold-400 transition-colors">Home</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-serif text-lg mb-6 text-gray-200 text-reveal">Contact Information</h4>
+                    <ul class="space-y-4 text-gray-400 text-sm font-light">
+                        <li class="flex items-start gap-3 text-reveal delay-1">
+                            <i data-lucide="phone" class="h-4 w-4 text-gold-400 mt-0.5 flex-shrink-0"></i>
+                            <span>+234 806 616 3249</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-reveal delay-2">
+                            <i data-lucide="mail" class="h-4 w-4 text-gold-400 mt-0.5 flex-shrink-0"></i>
+                            <span>debbyhautecourture23@gmail.com</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-reveal delay-3">
+                            <i data-lucide="map-pin" class="h-4 w-4 text-gold-400 mt-0.5 flex-shrink-0"></i>
+                            <span>Aromokeye Shopping Complex, Ido Ekiti</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-serif text-lg mb-6 text-gray-200 text-reveal">Atelier Hours</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm font-light">
+                        <li class="flex justify-between text-reveal delay-1">
+                            <span>Monday - Friday</span>
+                            <span class="text-gray-300">9:00 AM - 6:00 PM</span>
+                        </li>
+                        <li class="flex justify-between text-reveal delay-2">
+                            <span>Saturday</span>
+                            <span class="text-gray-300">10:00 AM - 4:00 PM</span>
+                        </li>
+                        <li class="flex justify-between text-reveal delay-3">
+                            <span>Sunday</span>
+                            <span class="text-gray-300">By Appointment</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+                <p class="font-light text-reveal">&copy; 2026 Debby Couture Atelier.</p>
+                <div class="flex space-x-8 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-gold-400 transition-colors font-light text-reveal delay-1">Privacy Policy</a>
+                    <a href="#" class="hover:text-gold-400 transition-colors font-light text-reveal delay-2">Terms of Service</a>
+                    <a href="#" class="hover:text-gold-400 transition-colors font-light text-reveal delay-3">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Time and Price Configuration
+        const timePriceMap = {
+            15: 10000,   // 15 minutes = ₦10,000
+            30: 20000,   // 30 minutes = ₦20,000
+            45: 30000,   // 45 minutes = ₦30,000
+            60: 40000,   // 60 minutes = ₦40,000
+            75: 50000,   // 75 minutes = ₦50,000
+            90: 60000,   // 90 minutes = ₦60,000
+            105: 70000,  // 105 minutes = ₦70,000
+            120: 80000,  // 120 minutes = ₦80,000
+            135: 90000,  // 135 minutes = ₦90,000
+            150: 100000, // 150 minutes = ₦100,000
+            165: 110000, // 165 minutes = ₦110,000
+            180: 120000  // 180 minutes = ₦120,000
+        };
+
+        // Scroll to section function
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Toast notification function
+        function showToast(message, type = 'success') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <div class="flex items-center">
+                    ${type === 'success' ? 
+                        '<i data-lucide="check-circle" class="w-5 h-5 mr-2"></i>' :
+                        type === 'error' ?
+                        '<i data-lucide="alert-circle" class="w-5 h-5 mr-2"></i>' :
+                        '<i data-lucide="info" class="w-5 w-5 mr-2"></i>'
+                    }
+                    <span>${message}</span>
+                </div>
+            `;
+            toastContainer.appendChild(toast);
+            
+            // Show toast
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // Remove toast after 5 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toastContainer.removeChild(toast);
+                }, 300);
+            }, 5000);
+            
+            // Reinitialize icons for the new toast
+            lucide.createIcons();
+        }
+
+        // Update time and price display
+        function updateTimeDisplay(minutes) {
+            const price = timePriceMap[minutes] || 0;
+            
+            // Update the slider value
+            document.getElementById('selectedTime').textContent = minutes;
+            
+            // Update time and price displays
+            document.getElementById('timeDisplay').textContent = `${minutes} minutes`;
+            document.getElementById('priceDisplay').textContent = `₦${price.toLocaleString()}`;
+            
+            // Update form selection
+            const formSelect = document.getElementById('bespoke_type');
+            const optionText = `${minutes} minutes - ₦${price.toLocaleString()}`;
+            
+            // Check if option exists, if not create it
+            let optionExists = false;
+            for (let i = 0; i < formSelect.options.length; i++) {
+                if (formSelect.options[i].text === optionText) {
+                    formSelect.selectedIndex = i;
+                    optionExists = true;
+                    break;
+                }
+            }
+            
+            // If option doesn't exist, create it and select it
+            if (!optionExists && minutes >= 15 && minutes <= 180) {
+                const newOption = new Option(optionText, optionText);
+                formSelect.add(newOption);
+                formSelect.selectedIndex = formSelect.options.length - 1;
+            }
+        }
+
+        // Select time slot function
+        function selectTimeSlot() {
+            const minutes = parseInt(document.getElementById('timeSlider').value);
+            const price = timePriceMap[minutes] || 0;
+            
+            // Scroll to form
+            scrollToSection('booking-form');
+            
+            // Focus on the name field
+            setTimeout(() => {
+                document.getElementById('bespoke_name').focus();
+            }, 300);
+            
+            showToast(`Time slot selected: ${minutes} minutes - ₦${price.toLocaleString()}`, 'info');
+        }
+
+        // Pop-up animation for images on scroll
+        function handleScrollAnimations() {
+            const images = document.querySelectorAll('.image-popup');
+            images.forEach(image => {
+                const rect = image.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                
+                if (rect.top < windowHeight * 0.85) {
+                    image.classList.add('visible');
+                }
+            });
+        }
+
+        // Initialize time slider and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+            
+            // Trigger text reveal animations
+            const textElements = document.querySelectorAll('.text-reveal');
+            textElements.forEach((el, index) => {
+                el.style.animationDelay = `${index * 0.1}s`;
+            });
+            
+            // Initialize time slider
+            const timeSlider = document.getElementById('timeSlider');
+            if (timeSlider) {
+                // Set initial display
+                updateTimeDisplay(parseInt(timeSlider.value));
+                
+                // Add event listener for slider changes
+                timeSlider.addEventListener('input', function() {
+                    const minutes = parseInt(this.value);
+                    // Snap to nearest 15-minute interval
+                    const snappedMinutes = Math.round(minutes / 15) * 15;
+                    this.value = snappedMinutes;
+                    updateTimeDisplay(snappedMinutes);
+                });
+                
+                // Add change event for final selection
+                timeSlider.addEventListener('change', function() {
+                    const minutes = parseInt(this.value);
+                    const price = timePriceMap[minutes] || 0;
+                    showToast(`Time selected: ${minutes} minutes - ₦${price.toLocaleString()}`, 'info');
+                });
+            }
+            
+            // Initial check for scroll animations
+            handleScrollAnimations();
+            
+            // Add scroll event listener for animations
+            window.addEventListener('scroll', handleScrollAnimations);
+        });
+
+        // Initiate WhatsApp function
+        function initiateWhatsApp() {
+            const phoneNumber = "+2348066163249";
+            const message = "Greetings from Debby Couture Atelier. I am interested in discussing a time-based bespoke consultation. Could you please provide more information?";
+            const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+
+        // Function to send confirmation email to customer
+        function sendCustomerConfirmation(customerData) {
+            const referenceNumber = Math.floor(100000 + Math.random() * 900000);
+            
+            // Extract time and price from the selected option
+            const selectedOption = customerData.bespoke_type;
+            const timeMatch = selectedOption.match(/(\d+)\s+minutes/);
+            const priceMatch = selectedOption.match(/₦([\d,]+)/);
+            
+            const customerParams = {
+                customer_name: customerData.bespoke_name,
+                customer_email: customerData.bespoke_email,
+                consultation_type: `Time-Based: ${selectedOption}`,
+                consultation_duration: timeMatch ? timeMatch[1] + ' minutes' : 'Not specified',
+                consultation_price: priceMatch ? `₦${priceMatch[1]}` : 'Not specified',
+                reference_number: referenceNumber,
+                submission_date: customerData.date
+            };
+            
+            const customerTemplateId = 'template_dxlofhd';
+            
+            return emailjs.send('service_q6a199l', customerTemplateId, customerParams)
+                .then(function(response) {
+                    console.log('Customer confirmation email sent successfully:', response);
+                    return response;
+                })
+                .catch(function(error) {
+                    console.error('Failed to send customer confirmation:', error);
+                    throw error;
+                });
+        }
+
+        // Bespoke form submission handler
+        document.getElementById('bespoke-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('bespoke-submit-btn');
+            const btnText = document.getElementById('bespoke-btn-text');
+            const btnSpinner = document.getElementById('bespoke-btn-spinner');
+            const form = e.target;
+            
+            if (!form.checkValidity()) {
+                showToast('Please complete all required fields appropriately.', 'error');
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            btnText.textContent = 'PROCESSING RESERVATION...';
+            btnSpinner.classList.remove('hidden');
+            
+            const currentDate = new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            const formData = new FormData(form);
+            
+            // Prepare template parameters for Email.js
+            const templateParams = {
+                bespoke_name: formData.get('bespoke_name'),
+                bespoke_email: formData.get('bespoke_email'),
+                bespoke_phone: formData.get('bespoke_phone'),
+                bespoke_type: formData.get('bespoke_type'),
+                project_description: formData.get('project_description'),
+                date: currentDate
+            };
+            
+            try {
+                const customerResponse = await sendCustomerConfirmation(templateParams);
+                const adminResponse = await emailjs.send('service_q6a199l', 'template_w7dnq98', templateParams);
+                
+                const phoneNumber = "+2348066163249";
+                let whatsappMessage = ` NEW TIME-BASED CONSULTATION BOOKING\n\n`;
+                whatsappMessage += `Client: ${templateParams.bespoke_name}\n`;
+                whatsappMessage += `Contact: ${templateParams.bespoke_phone}\n`;
+                whatsappMessage += `Email: ${templateParams.bespoke_email}\n`;
+                whatsappMessage += `⏱Duration: ${templateParams.bespoke_type}\n`;
+                whatsappMessage += `Submitted: ${templateParams.date}\n\n`;
+                whatsappMessage += ` Vision:\n${templateParams.project_description}\n\n`;
+                whatsappMessage += ` Confirmation email sent to client\n`;
+                whatsappMessage += ` ACTION: Please contact within 24 hours`;
+                
+                const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+                
+                showToast('Time slot reserved! Check your email for details.', 'success');
+                document.getElementById('bespoke-form').reset();
+                
+                // Reset slider to default
+                document.getElementById('timeSlider').value = 60;
+                updateTimeDisplay(60);
+                
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    btnText.textContent = 'SECURE MY TIME SLOT';
+                    btnSpinner.classList.add('hidden');
+                }, 1500);
+                
+                setTimeout(() => {
+                    window.open(whatsappURL, '_blank');
+                }, 500);
+                
+            } catch (error) {
+                console.error('Email sending failed:', error);
+                
+                const phoneNumber = "+2348066163249";
+                let whatsappMessage = ` TIME-BASED BOOKING REQUEST (Email Failed)\n\n`;
+                whatsappMessage += `Name: ${templateParams.bespoke_name}\n`;
+                whatsappMessage += `Phone: ${templateParams.bespoke_phone}\n`;
+                whatsappMessage += `Email: ${templateParams.bespoke_email}\n`;
+                whatsappMessage += `Duration: ${templateParams.bespoke_type}\n`;
+                whatsappMessage += `Request: ${templateParams.project_description}\n\n`;
+                whatsappMessage += `Email error: ${error.text || error.message || 'Unknown error'}`;
+                
+                const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+                
+                showToast('Email system error. Redirecting to WhatsApp...', 'error');
+                
+                submitBtn.disabled = false;
+                btnText.textContent = 'SECURE MY TIME SLOT';
+                btnSpinner.classList.add('hidden');
+                
+                setTimeout(() => {
+                    window.open(whatsappURL, '_blank');
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>

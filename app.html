@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="en" style="height: auto; min-height: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debby Haute Couture | Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            400: '#D4AF37',
+                            500: '#C5A028',
+                            600: '#B49020',
+                        },
+                        dark: {
+                            900: '#0a0a0a',
+                            800: '#121212',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html, body {
+            height: auto;
+            min-height: 100%;
+            scroll-behavior: smooth;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .active-nav {
+            color: #D4AF37;
+        }
+        .size-radio:checked + label {
+            background-color: #000;
+            color: #fff;
+            border-color: #000;
+        }
+        
+        /* Size Chart Modal Animation - Slow slide from left */
+        @keyframes slideInLeft {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOutLeft {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(-100%); opacity: 0; }
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 0.6s ease-out forwards;
+        }
+        
+        .slide-out-left {
+            animation: slideOutLeft 0.6s ease-in forwards;
+        }
+        
+        /* Toast animation */
+        @keyframes slideInToast {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        
+        @keyframes slideOutToast {
+            from { transform: translateX(0); }
+            to { transform: translateX(100%); }
+        }
+        
+        .toast-in {
+            animation: slideInToast 0.4s ease-out forwards;
+        }
+        
+        .toast-out {
+            animation: slideOutToast 0.4s ease-in forwards;
+        }
+    </style>
+</head>
+<body class="bg-white text-dark-900 font-sans antialiased pb-20 md:pb-0" style="height: auto; min-height: 100%;">
+    
+    <!-- Cart & Wishlist Data -->
+    <script>
+        let cart = [];
+        let wishlist = [];
+        let currentProduct = null;
+        let selectedSize = 'S';
+        let selectedColor = 'Black';
+        let currentQuantity = 1;
+        
+        // Initialize cart and wishlist from localStorage
+        function initCart() {
+            const savedCart = localStorage.getItem('debby_cart');
+            const savedWishlist = localStorage.getItem('debby_wishlist');
+            
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+                updateCartCount();
+            }
+            
+            if (savedWishlist) {
+                wishlist = JSON.parse(savedWishlist);
+                updateWishlistCount();
+            }
+        }
+        
+        function updateCartCount() {
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            const cartBadges = document.querySelectorAll('.cart-badge');
+            const cartCounts = document.querySelectorAll('.cart-count');
+            
+            cartBadges.forEach(badge => {
+                badge.textContent = count > 9 ? '9+' : count;
+                badge.style.display = count > 0 ? 'flex' : 'none';
+            });
+            
+            cartCounts.forEach(countEl => {
+                countEl.textContent = count > 9 ? '9+' : count;
+            });
+        }
+        
+        function updateWishlistCount() {
+            const count = wishlist.length;
+            const wishlistBadges = document.querySelectorAll('.wishlist-badge');
+            const wishlistCounts = document.querySelectorAll('.wishlist-count');
+            
+            wishlistBadges.forEach(badge => {
+                badge.textContent = count > 9 ? '9+' : count;
+                badge.style.display = count > 0 ? 'flex' : 'none';
+            });
+            
+            wishlistCounts.forEach(countEl => {
+                countEl.textContent = count > 9 ? '9+' : count;
+            });
+        }
+        
+        function addToCart(product, size, color, quantity = 1) {
+            const existingItem = cart.find(item => 
+                item.id === product.id && 
+                item.size === size && 
+                item.color === color
+            );
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    ...product,
+                    size: size,
+                    color: color,
+                    quantity: quantity
+                });
+            }
+            
+            localStorage.setItem('debby_cart', JSON.stringify(cart));
+            updateCartCount();
+            
+            // Show toast notification
+            showToast(`${product.name} added to cart`);
+            
+            // If we're on the cart screen, update it
+            if (document.getElementById('view-cart').classList.contains('active')) {
+                renderCart();
+            }
+        }
+        
+        function removeFromCart(productId, size, color) {
+            cart = cart.filter(item => 
+                !(item.id === productId && item.size === size && item.color === color)
+            );
+            localStorage.setItem('debby_cart', JSON.stringify(cart));
+            updateCartCount();
+            
+            if (document.getElementById('view-cart').classList.contains('active')) {
+                renderCart();
+            }
+            
+            showToast('Item removed from cart');
+        }
+        
+        function toggleWishlist(product) {
+            const index = wishlist.findIndex(item => item.id === product.id);
+            
+            if (index > -1) {
+                wishlist.splice(index, 1);
+                showToast('Removed from saved items');
+            } else {
+                wishlist.push(product);
+                showToast('Added to saved items');
+            }
+            
+            localStorage.setItem('debby_wishlist', JSON.stringify(wishlist));
+            updateWishlistCount();
+            
+            // Update heart icons
+            updateWishlistIcons();
+            
+            // If we're on the wishlist screen, update it
+            if (document.getElementById('view-favorites').classList.contains('active')) {
+                renderWishlist();
+            }
+        }
+        
+        function isInWishlist(productId) {
+            return wishlist.some(item => item.id === productId);
+        }
+        
+        function updateWishlistIcons() {
+            document.querySelectorAll('.wishlist-btn').forEach(btn => {
+                const productId = btn.dataset.productId;
+                if (productId && isInWishlist(productId)) {
+                    btn.innerHTML = '<i data-lucide="heart" class="h-4 w-4 fill-red-500 text-red-500"></i>';
+                    btn.classList.add('text-red-500');
+                } else {
+                    btn.innerHTML = '<i data-lucide="heart" class="h-4 w-4"></i>';
+                    btn.classList.remove('text-red-500');
+                }
+                lucide.createIcons();
+            });
+            
+            // Update product detail wishlist button
+            const productWishlistBtn = document.getElementById('product-wishlist-btn');
+            if (productWishlistBtn && currentProduct) {
+                if (isInWishlist(currentProduct.id)) {
+                    productWishlistBtn.innerHTML = '<i data-lucide="heart" class="h-6 w-6 fill-red-500 text-red-500"></i>';
+                } else {
+                    productWishlistBtn.innerHTML = '<i data-lucide="heart" class="h-6 w-6"></i>';
+                }
+                lucide.createIcons();
+            }
+        }
+        
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastTitle = document.getElementById('toast-title');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastTitle.textContent = message.includes('added') ? 'Added to Cart' : 
+                                   message.includes('removed') ? 'Removed' : 
+                                   message.includes('saved') ? 'Saved' : 'Success';
+            toastMessage.textContent = message;
+            
+            toast.classList.remove('translate-x-full', 'toast-out');
+            toast.classList.add('toast-in');
+            
+            setTimeout(() => {
+                toast.classList.remove('toast-in');
+                toast.classList.add('toast-out');
+                setTimeout(() => {
+                    toast.classList.add('translate-x-full');
+                    toast.classList.remove('toast-out');
+                }, 400);
+            }, 3000);
+            
+            lucide.createIcons();
+        }
+        
+        function renderCart() {
+            const cartContainer = document.getElementById('cart-items-container');
+            const cartCount = document.getElementById('cart-items-count');
+            
+            if (cart.length === 0) {
+                cartContainer.innerHTML = `
+                    <div class="text-center py-12">
+                        <i data-lucide="shopping-cart" class="h-16 w-16 text-gray-300 mx-auto mb-4"></i>
+                        <p class="text-gray-500 mb-4">Your cart is empty</p>
+                        <button onclick="navigateTo('shop')" class="bg-black text-white px-6 py-3 rounded-xl font-semibold">
+                            Start Shopping
+                        </button>
+                    </div>
+                `;
+                if (cartCount) cartCount.textContent = '0 items';
+                return;
+            }
+            
+            const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+            if (cartCount) cartCount.textContent = `${itemCount} ${itemCount === 1 ? 'item' : 'items'}`;
+            
+            cartContainer.innerHTML = cart.map(item => `
+                <div class="flex gap-4 py-6 border-b border-gray-200">
+                    <div class="w-24 h-32 flex-shrink-0 bg-gray-200 overflow-hidden rounded">
+                        <img src="${item.image}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1 flex flex-col justify-between">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-medium text-gray-900">${item.name}</h3>
+                                <p class="text-sm text-gray-500 mt-1">Size: ${item.size} | Color: ${item.color}</p>
+                            </div>
+                            <span class="font-medium">₦${(item.price * item.quantity).toFixed(2)}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center border border-gray-300 rounded bg-white">
+                                <button onclick="updateCartItemQuantity('${item.id}', '${item.size}', '${item.color}', -1)" class="px-2 py-1 text-gray-500 hover:text-black">-</button>
+                                <span class="px-2 text-xs">${item.quantity}</span>
+                                <button onclick="updateCartItemQuantity('${item.id}', '${item.size}', '${item.color}', 1)" class="px-2 py-1 text-gray-500 hover:text-black">+</button>
+                            </div>
+                            <button onclick="removeFromCart('${item.id}', '${item.size}', '${item.color}')" class="text-xs text-red-500 underline">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            updateOrderSummary();
+            lucide.createIcons();
+        }
+        
+        function updateCartItemQuantity(productId, size, color, change) {
+            const item = cart.find(item => 
+                item.id === productId && 
+                item.size === size && 
+                item.color === color
+            );
+            
+            if (item) {
+                item.quantity += change;
+                if (item.quantity < 1) {
+                    removeFromCart(productId, size, color);
+                } else {
+                    localStorage.setItem('debby_cart', JSON.stringify(cart));
+                    updateCartCount();
+                    renderCart();
+                }
+            }
+        }
+        
+        function updateOrderSummary() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shipping = 0;
+            const tax = subtotal * 0.08;
+            const total = subtotal + shipping + tax;
+            
+            const subtotalElement = document.getElementById('cart-subtotal');
+            const totalElement = document.getElementById('cart-total');
+            
+            if (subtotalElement) subtotalElement.textContent = `₦${subtotal.toFixed(2)}`;
+            if (totalElement) totalElement.textContent = `₦${total.toFixed(2)}`;
+        }
+        
+        function checkoutWhatsApp() {
+            const phoneNumber = "+2348066163249";
+            let message = "Hi, I want to order from DEBBY HAUTE COUTURE:\n\n";
+            
+            cart.forEach((item, index) => {
+                message += `${index + 1}. ${item.name} (Size: ${item.size}, Color: ${item.color}) - ₦${item.price.toFixed(2)} x ${item.quantity} = ₦${(item.price * item.quantity).toFixed(2)}\n`;
+            });
+            
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tax = subtotal * 0.08;
+            const total = subtotal + tax;
+            
+            message += `\nSubtotal: ₦${subtotal.toFixed(2)}`;
+            message += `\nTax: ₦${tax.toFixed(2)}`;
+            message += `\nTotal Price: ₦${total.toFixed(2)}`;
+            message += `\n\nPlease confirm my order.`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            
+            window.open(whatsappURL, '_blank');
+        }
+        
+        function clearCart() {
+            if (confirm('Are you sure you want to clear your cart?')) {
+                cart = [];
+                localStorage.setItem('debby_cart', JSON.stringify(cart));
+                updateCartCount();
+                renderCart();
+                showToast('Cart cleared');
+            }
+        }
+        
+        function shareProduct() {
+            if (currentProduct) {
+                const text = `Check out this ${currentProduct.name} from DEBBY HAUTE COUTURE! Price: ₦${currentProduct.price.toFixed(2)}`;
+                const url = window.location.href.split('?')[0] + '?view=product&id=' + currentProduct.id;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: currentProduct.name,
+                        text: text,
+                        url: url
+                    });
+                } else {
+                    navigator.clipboard.writeText(`${text} ${url}`);
+                    showToast('Product link copied to clipboard!');
+                }
+            }
+        }
+        
+        function shareStore() {
+            const text = "Check out DEBBY HAUTE COUTURE - Premium luxury fashion!";
+            const url = window.location.href.split('?')[0];
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'DEBBY HAUTE COUTURE',
+                    text: text,
+                    url: url
+                });
+            } else {
+                navigator.clipboard.writeText(`${text} ${url}`);
+                showToast('Store link copied to clipboard!');
+            }
+        }
+        
+        function shareWishlist() {
+            if (wishlist.length === 0) {
+                showToast('Your saved list is empty');
+                return;
+            }
+            
+            let text = "My Saved Items from DEBBY HAUTE COUTURE:\n\n";
+            wishlist.forEach((item, index) => {
+                text += `${index + 1}. ${item.name} - ₦${item.price.toFixed(2)}\n`;
+            });
+            
+            text += "\nCheck them out!";
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My Saved Items',
+                    text: text,
+                });
+            } else {
+                navigator.clipboard.writeText(text);
+                showToast('Saved items copied to clipboard!');
+            }
+        }
+        
+        function shareCurrentPage() {
+            const url = window.location.href;
+            const title = document.title;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: title,
+                    url: url
+                });
+            } else {
+                navigator.clipboard.writeText(url);
+                showToast('Link copied to clipboard!');
+            }
+        }
+        
+        function contactUs() {
+            const phone = "+2348066163249";
+            const message = "Hello DEBBY HAUTE COUTURE, I'd like to inquire about...";
+            const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+    </script>
+
+    <!-- Navigation (App Shell) -->
+    <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-300" id="main-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="navigateTo('shop')">
+                    <span class="font-serif text-2xl font-bold tracking-tighter">DEBBY <span class="text-gold-500 text-sm align-top">HC</span></span>
+                </div>
+                <div class="hidden md:flex flex-1 max-w-md mx-8">
+                    <div class="relative w-full">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i data-lucide="search" class="h-4 w-4 text-gray-400"></i>
+                        </div>
+                        <input type="text" class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-full leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-gold-500 focus:ring-1 focus:ring-gold-500 sm:text-sm transition-colors" placeholder="Search for luxury pieces..." onkeyup="searchProducts(this.value)">
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-6">
+                    <button onclick="shareCurrentPage()" class="text-gray-600 hover:text-gold-500 transition-colors flex flex-col items-center gap-1">
+                        <i data-lucide="share-2" class="h-5 w-5"></i>
+                        <span class="text-[10px] uppercase tracking-wider font-medium">Share</span>
+                    </button>
+                    <button onclick="navigateTo('favorites')" class="text-gray-600 hover:text-gold-500 transition-colors flex flex-col items-center gap-1 relative">
+                        <i data-lucide="heart" class="h-5 w-5"></i>
+                        <span class="text-[10px] uppercase tracking-wider font-medium">Saved</span>
+                        <span class="wishlist-badge absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center rounded-full bg-gold-500 text-[10px] font-bold text-white" style="display: none;">0</span>
+                    </button>
+                    <button onclick="navigateTo('cart')" class="text-gray-600 hover:text-gold-500 transition-colors flex flex-col items-center gap-1 relative">
+                        <i data-lucide="shopping-bag" class="h-5 w-5"></i>
+                        <span class="text-[10px] uppercase tracking-wider font-medium">Cart</span>
+                        <span class="cart-badge absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center rounded-full bg-black text-[10px] font-bold text-white" style="display: none;">0</span>
+                    </button>
+                </div>
+                <div class="flex items-center md:hidden space-x-4">
+                    <button onclick="shareCurrentPage()" class="text-gray-800">
+                        <i data-lucide="share-2" class="h-6 w-6"></i>
+                    </button>
+                    <button onclick="navigateTo('favorites')" class="text-gray-800 relative">
+                        <i data-lucide="heart" class="h-6 w-6"></i>
+                        <span class="wishlist-badge absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center rounded-full bg-gold-500 text-[10px] font-bold text-white" style="display: none;">0</span>
+                    </button>
+                    <button onclick="navigateTo('cart')" class="text-gray-800 relative">
+                        <i data-lucide="shopping-bag" class="h-6 w-6"></i>
+                        <span class="cart-badge absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center rounded-full bg-gold-500 text-[10px] font-bold text-white" style="display: none;">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="main-content">
+        <!-- VIEW: SHOP / LISTING -->
+        <div id="view-shop" class="fade-in">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div class="flex flex-col md:flex-row gap-8">
+                    <aside class="w-full md:w-64 flex-shrink-0 hidden md:block">
+                        <div class="sticky top-24 space-y-8">
+                            <div>
+                                <h3 class="font-serif text-lg mb-4">Categories</h3>
+                                <ul class="space-y-2 text-sm text-gray-600" id="category-list">
+                                    <li class="font-medium text-black cursor-pointer active-category" onclick="filterCategory('all', this)">All Products</li>
+                                    <li class="cursor-pointer hover:text-gold-500" onclick="filterCategory('dresses', this)">Dresses</li>
+                                    <li class="cursor-pointer hover:text-gold-500" onclick="filterCategory('tops', this)">Tops & Blouses</li>
+                                    <li class="cursor-pointer hover:text-gold-500" onclick="filterCategory('pants', this)">Pants & Trousers</li>
+                                    <li class="cursor-pointer hover:text-gold-500" onclick="filterCategory('jackets', this)">Jackets & Coats</li>
+                                    <li class="cursor-pointer hover:text-gold-500" onclick="filterCategory('shoes', this)">Shoes</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="font-serif text-lg mb-4">Filter By</h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="text-xs font-bold uppercase text-gray-400 mb-2 block">Price Range</label>
+                                        <input type="range" min="0" max="1000" value="1000" class="w-full accent-gold-500 h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer" oninput="filterByPrice(this.value)" id="price-slider">
+                                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                            <span>₦0</span>
+                                            <span id="current-price">₦1000+</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                    <div class="md:hidden w-full flex gap-2 overflow-x-auto pb-4 hide-scrollbar">
+                        <button class="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-full text-sm whitespace-nowrap">
+                            <i data-lucide="sliders-horizontal" class="h-3 w-3"></i> Filters
+                        </button>
+                        <button class="category-pill px-4 py-2 bg-black text-white rounded-full text-sm whitespace-nowrap hover:bg-gray-200 active" onclick="filterCategory('all', this)">All</button>
+                        <button class="category-pill px-4 py-2 bg-gray-100 rounded-full text-sm whitespace-nowrap hover:bg-gray-200" onclick="filterCategory('dresses', this)">Dresses</button>
+                        <button class="category-pill px-4 py-2 bg-gray-100 rounded-full text-sm whitespace-nowrap hover:bg-gray-200" onclick="filterCategory('tops', this)">Tops</button>
+                        <button class="category-pill px-4 py-2 bg-gray-100 rounded-full text-sm whitespace-nowrap hover:bg-gray-200" onclick="filterCategory('jackets', this)">Jackets</button>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="font-serif text-2xl">New Arrivals <span class="text-gray-400 text-lg font-sans font-normal ml-2">(<span id="product-count">12</span> items)</span></h2>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm text-gray-500 hidden sm:inline">Sort by:</span>
+                                <select class="text-sm border-none bg-transparent font-medium focus:ring-0 cursor-pointer" onchange="sortProducts(this.value)">
+                                    <option value="newest">Newest First</option>
+                                    <option value="price-low">Price: Low to High</option>
+                                    <option value="price-high">Price: High to Low</option>
+                                    <option value="popular">Popularity</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="products-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8 md:gap-x-8 md:gap-y-12">
+                            <!-- Products will be loaded here -->
+                        </div>
+                        <div class="mt-16 text-center" id="load-more-container">
+                            <button class="px-8 py-3 border border-gray-300 text-sm uppercase tracking-widest hover:border-black hover:bg-black hover:text-white transition-all" onclick="loadMoreProducts()" id="load-more-btn">Load More Products</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: PRODUCT DETAILS -->
+        <div id="view-product" class="hidden fade-in">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <nav class="flex mb-8 text-xs text-gray-500">
+                    <ol class="flex items-center space-x-2">
+                        <li><a href="#" onclick="navigateTo('shop')" class="hover:text-black">Home</a></li>
+                        <li><span class="mx-1">/</span></li>
+                        <li><a href="#" onclick="navigateTo('shop')" class="hover:text-black">Women</a></li>
+                        <li><span class="mx-1">/</span></li>
+                        <li><a href="#" onclick="navigateTo('shop')" class="hover:text-black">Dresses</a></li>
+                        <li><span class="mx-1">/</span></li>
+                        <li class="text-black font-medium" id="product-title-nav">Product</li>
+                    </ol>
+                </nav>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <div class="space-y-4" id="product-images">
+                        <!-- Product images will be loaded here -->
+                    </div>
+                    <div class="flex flex-col" id="product-details">
+                        <!-- Product details will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: CART -->
+        <div id="view-cart" class="hidden fade-in">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <h1 class="font-serif text-3xl mb-2 text-center">Your Shopping Bag</h1>
+                <p class="text-gray-500 text-sm text-center mb-8" id="cart-items-count">0 items</p>
+                <div class="bg-gray-50 p-6 rounded-lg mb-8" id="cart-items-container">
+                    <!-- Cart items will be rendered here -->
+                </div>
+                <div class="space-y-4">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Subtotal</span>
+                        <span class="font-medium" id="cart-subtotal">₦0.00</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Shipping</span>
+                        <span class="text-green-600">Free</span>
+                    </div>
+                    <div class="flex justify-between text-lg font-bold pt-4 border-t border-gray-200">
+                        <span>Total</span>
+                        <span id="cart-total">₦0.00</span>
+                    </div>
+                    <button onclick="checkoutWhatsApp()" class="w-full bg-black text-white py-4 font-bold uppercase tracking-widest hover:bg-gold-600 transition-colors shadow-lg mt-4 flex items-center justify-center gap-2">
+                        <i data-lucide="message-circle" class="h-5 w-5"></i> Checkout via WhatsApp
+                    </button>
+                    <button onclick="navigateTo('shop')" class="w-full text-center text-sm text-gray-500 hover:text-black mt-2">
+                        Continue Shopping
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: FAVORITES -->
+        <div id="view-favorites" class="hidden fade-in">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <h1 class="font-serif text-3xl mb-2">My Wishlist</h1>
+                <p class="text-gray-400 text-lg font-sans font-normal mb-8">(<span id="wishlist-count" class="wishlist-count">0</span> items)</p>
+                <div id="wishlist-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <!-- Wishlist items will be rendered here -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 pb-safe">
+        <div class="grid grid-cols-4 h-16">
+            <button onclick="navigateTo('shop')" class="flex flex-col items-center justify-center text-gray-500 hover:text-black active:text-gold-500">
+                <i data-lucide="home" class="h-5 w-5 mb-1"></i>
+                <span class="text-[10px]">Home</span>
+            </button>
+            <button onclick="shareCurrentPage()" class="flex flex-col items-center justify-center text-gray-500 hover:text-black active:text-gold-500">
+                <i data-lucide="share-2" class="h-5 w-5 mb-1"></i>
+                <span class="text-[10px]">Share</span>
+            </button>
+            <button onclick="navigateTo('favorites')" class="flex flex-col items-center justify-center text-gray-500 hover:text-black active:text-gold-500 relative">
+                <i data-lucide="heart" class="h-5 w-5 mb-1"></i>
+                <span class="text-[10px]">Saved</span>
+                <span class="wishlist-badge absolute top-0 right-1/4 h-3 w-3 flex items-center justify-center rounded-full bg-gold-500 text-[8px] font-bold text-white" style="display: none;">0</span>
+            </button>
+            <button onclick="navigateTo('cart')" class="flex flex-col items-center justify-center text-gray-500 hover:text-black active:text-gold-500 relative">
+                <i data-lucide="shopping-bag" class="h-5 w-5 mb-1"></i>
+                                <span class="text-[10px]">Cart</span>
+                <span class="cart-badge absolute top-0 right-1/4 h-3 w-3 flex items-center justify-center rounded-full bg-black text-[8px] font-bold text-white" style="display: none;">0</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Size Guide Modal - Changed to slide from left slowly -->
+    <div id="size-modal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="toggleSizeGuide()"></div>
+        <div class="absolute left-0 top-0 bottom-0 w-full max-w-md bg-white shadow-2xl" id="size-modal-content">
+            <div class="p-6 h-full overflow-y-auto">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="font-serif text-2xl">Size Guide</h2>
+                    <button onclick="toggleSizeGuide()" class="p-2 hover:bg-gray-100 rounded-full"><i data-lucide="x" class="h-6 w-6"></i></button>
+                </div>
+                <div class="mb-8">
+                    <div class="flex border-b border-gray-200 mb-4">
+                        <button id="cmTab" class="pb-2 border-b-2 border-black font-bold text-sm mr-6" onclick="switchSizeChartTab('cm')">CM</button>
+                        <button id="inchTab" class="pb-2 text-gray-400 text-sm hover:text-black" onclick="switchSizeChartTab('inch')">INCHES</button>
+                    </div>
+                    <div id="cmChart" class="size-chart-content">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-gray-50 text-xs uppercase text-gray-500">
+                                <tr>
+                                    <th class="px-4 py-3">Size</th>
+                                    <th class="px-4 py-3">Bust</th>
+                                    <th class="px-4 py-3">Waist</th>
+                                    <th class="px-4 py-3">Hips</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr class="size-row" data-size="XS">
+                                    <td class="px-4 py-3 font-bold">XS</td>
+                                    <td class="px-4 py-3">81-84 cm</td>
+                                    <td class="px-4 py-3">63-66 cm</td>
+                                    <td class="px-4 py-3">88-91 cm</td>
+                                </tr>
+                                <tr class="size-row" data-size="S">
+                                    <td class="px-4 py-3 font-bold">S</td>
+                                    <td class="px-4 py-3">85-88 cm</td>
+                                    <td class="px-4 py-3">67-70 cm</td>
+                                    <td class="px-4 py-3">92-95 cm</td>
+                                </tr>
+                                <tr class="size-row" data-size="M">
+                                    <td class="px-4 py-3 font-bold">M</td>
+                                    <td class="px-4 py-3">89-92 cm</td>
+                                    <td class="px-4 py-3">71-74 cm</td>
+                                    <td class="px-4 py-3">96-99 cm</td>
+                                </tr>
+                                <tr class="size-row" data-size="L">
+                                    <td class="px-4 py-3 font-bold">L</td>
+                                    <td class="px-4 py-3">93-96 cm</td>
+                                    <td class="px-4 py-3">75-78 cm</td>
+                                    <td class="px-4 py-3">100-103 cm</td>
+                                </tr>
+                                <tr class="size-row" data-size="XL">
+                                    <td class="px-4 py-3 font-bold">XL</td>
+                                    <td class="px-4 py-3">97-100 cm</td>
+                                    <td class="px-4 py-3">79-82 cm</td>
+                                    <td class="px-4 py-3">104-107 cm</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="inchChart" class="size-chart-content hidden">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-gray-50 text-xs uppercase text-gray-500">
+                                <tr>
+                                    <th class="px-4 py-3">Size</th>
+                                    <th class="px-4 py-3">Bust</th>
+                                    <th class="px-4 py-3">Waist</th>
+                                    <th class="px-4 py-3">Hips</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr class="size-row" data-size="XS">
+                                    <td class="px-4 py-3 font-bold">XS</td>
+                                    <td class="px-4 py-3">32-33"</td>
+                                    <td class="px-4 py-3">25-26"</td>
+                                    <td class="px-4 py-3">35-36"</td>
+                                </tr>
+                                <tr class="size-row" data-size="S">
+                                    <td class="px-4 py-3 font-bold">S</td>
+                                    <td class="px-4 py-3">33-35"</td>
+                                    <td class="px-4 py-3">26-28"</td>
+                                    <td class="px-4 py-3">36-37"</td>
+                                </tr>
+                                <tr class="size-row" data-size="M">
+                                    <td class="px-4 py-3 font-bold">M</td>
+                                    <td class="px-4 py-3">35-36"</td>
+                                    <td class="px-4 py-3">28-29"</td>
+                                    <td class="px-4 py-3">38-39"</td>
+                                </tr>
+                                <tr class="size-row" data-size="L">
+                                    <td class="px-4 py-3 font-bold">L</td>
+                                    <td class="px-4 py-3">37-38"</td>
+                                    <td class="px-4 py-3">30-31"</td>
+                                    <td class="px-4 py-3">39-41"</td>
+                                </tr>
+                                <tr class="size-row" data-size="XL">
+                                    <td class="px-4 py-3 font-bold">XL</td>
+                                    <td class="px-4 py-3">38-39"</td>
+                                    <td class="px-4 py-3">31-32"</td>
+                                    <td class="px-4 py-3">41-42"</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-lg mb-6">
+                    <h3 class="font-serif text-lg mb-4">How to Measure</h3>
+                    <ul class="space-y-4 text-sm text-gray-600">
+                        <li class="flex gap-3">
+                            <span class="font-bold text-black">1. Bust</span>
+                            <span>Measure around the fullest part of your chest.</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="font-bold text-black">2. Waist</span>
+                            <span>Measure at the narrowest part of your waistline.</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="font-bold text-black">3. Hips</span>
+                            <span>Measure at the fullest part of your hips.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-gold-50 border border-gold-200 p-4 rounded text-sm text-gold-800">
+                    <p><strong>Tip:</strong> If you are between sizes, we recommend sizing up for a more comfortable fit.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-24 right-4 bg-black text-white px-6 py-4 rounded shadow-2xl transform translate-x-full transition-transform duration-300 z-[70] flex items-center gap-3">
+        <i data-lucide="check-circle" class="h-5 w-5 text-gold-400"></i>
+        <div>
+            <h4 id="toast-title" class="font-bold text-sm"></h4>
+            <p id="toast-message" class="text-xs text-gray-300"></p>
+        </div>
+    </div>
+
+    <script>
+        // Product data
+        const products = [
+            {
+                id: '1',
+                name: 'Tailored Dresses',
+                category: 'dresses',
+                collection: 'Signature Collection',
+                price: 299.00,
+                image: 'pictures/img5.jpg',
+                images: ['pictures/img5.jpg', 'pictures/img3.jpg'],
+                description: 'Crafted from premium Italian velvet, this gown features a plunging neckline and a high slit.',
+                tag: 'NEW',
+                colors: ['Black', 'Navy', 'Burgundy']
+            },
+            {
+                id: '2',
+                name: 'Tailored Tops',
+                category: 'tops',
+                collection: 'Evening Collection',
+                price: 185.00,
+                image: 'pictures/img3.jpg',
+                images: ['pictures/img3.jpg', 'pictures/img1.jpg'],
+                description: 'Elegant silk cocktail dress perfect for evening events.',
+                colors: ['White', 'Black', 'Gold']
+            },
+            {
+                id: '3',
+                name: 'Complete Suits',
+                category: 'jackets',
+                collection: 'Ready-to-Wear',
+                price: 120.00,
+                image: 'pictures/img2.jpg',
+                images: ['pictures/img2.jpg', 'pictures/img6.jpg'],
+                description: 'Light and breezy summer dress made from premium cotton.',
+                tag: '-20%',
+                colors: ['White', 'Beige', 'Blue']
+            },
+            {
+                id: '4',
+                name: 'Premium Heritages',
+                category: 'tops',
+                collection: 'Party Collection',
+                price: 89.00,
+                image: 'pictures/img6.jpg',
+                images: ['pictures/img6.jpg', 'pictures/img4.jpg'],
+                description: 'Shimmering sequin top for your next party.',
+                colors: ['Gold', 'Silver', 'Black']
+            },
+            {
+                id: '5',
+                name: 'Tailored Dresses',
+                category: 'dresses',
+                collection: 'Evening Collection',
+                price: 450.00,
+                image: 'https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                images: ['https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'],
+                tag: 'NEW',
+                colors: ['Black', 'Red', 'Navy']
+            },
+            {
+                id: '6',
+                name: 'Complete Suits',
+                category: 'dresses',
+                collection: 'Signature Collection',
+                price: 210.00,
+                image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                images: ['https://images.unsplash.com/photo-1595777457583-95e059d581b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'],
+                description: 'Elegant royal blue maxi dress for special occasions.',
+                colors: ['Blue', 'White', 'Black']
+            },
+            {
+                id: '7',
+                name: 'Tailored Tops',
+                category: 'tops',
+                collection: 'Premium Collection',
+                price: 550.00,
+                image: 'pictures/img1.jpg',
+                images: ['pictures/img1.jpg', 'pictures/img5.jpg'],
+                tag: 'NEW',
+                colors: ['White', 'Black', 'Pink']
+            },
+            {
+                id: '8',
+                name: 'Complete Suits',
+                category: 'dresses',
+                collection: 'Summer Collection',
+                price: 145.00,
+                image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                images: ['https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'],
+                colors: ['Yellow', 'White', 'Green']
+            },
+            {
+                id: '9',
+                name: 'Tailored Pants',
+                category: 'pants',
+                collection: 'Luxury Collection',
+                price: 125.00,
+                image: 'pictures/img6.jpg',
+                images: ['pictures/img6.jpg', 'pictures/img3.jpg'],
+                colors: ['Black', 'Gray', 'Navy']
+            },
+            {
+                id: '10',
+                name: 'Bridal Gown',
+                category: 'dresses',
+                collection: 'Bridal Collection',
+                price: 899.00,
+                image: 'https://images.unsplash.com/photo-1537832816519-689ad163238b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                images: ['https://images.unsplash.com/photo-1537832816519-689ad163238b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'],
+                tag: 'BEST',
+                colors: ['White', 'Ivory', 'Champagne']
+            }
+        ];
+        
+        let filteredProducts = [...products];
+        let displayedProducts = 6;
+        let isShowingAllProducts = false;
+
+        function renderProducts() {
+            const grid = document.getElementById('products-grid');
+            const count = document.getElementById('product-count');
+            const loadMoreContainer = document.getElementById('load-more-container');
+            
+            const productsToShow = filteredProducts.slice(0, displayedProducts);
+            
+            grid.innerHTML = productsToShow.map(product => `
+                <div class="group cursor-pointer" onclick="openProductDetail('${product.id}')">
+                    <div class="relative aspect-[3/4] overflow-hidden bg-gray-100 mb-4">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <button class="wishlist-btn absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-white ${isInWishlist(product.id) ? 'text-red-500' : ''}" data-product-id="${product.id}" onclick="event.stopPropagation(); toggleWishlist(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+                            ${isInWishlist(product.id) ? '<i data-lucide="heart" class="h-4 w-4 fill-red-500 text-red-500"></i>' : '<i data-lucide="heart" class="h-4 w-4"></i>'}
+                        </button>
+                        ${product.tag ? `<div class="absolute top-3 left-3 ${product.tag.includes('NEW') ? 'bg-gold-500' : product.tag.includes('BEST') ? 'bg-black' : 'bg-red-500'} text-white text-xs font-bold px-2.5 py-1 rounded-full">${product.tag}</div>` : ''}
+                        <div class="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                            <button class="w-full bg-white text-black py-3 text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-colors" onclick="event.stopPropagation(); addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')}, 'S', 'Black', 1)">
+                                Quick Add
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-start">
+                            <h3 class="text-sm font-medium text-gray-900 group-hover:text-gold-600 transition-colors">${product.name}</h3>
+                            <span class="text-sm font-semibold">₦${product.price.toFixed(2)}</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">${product.collection}</p>
+                    </div>
+                </div>
+            `).join('');
+            
+            if (count) count.textContent = filteredProducts.length;
+            
+            // Update load more/show less button
+            if (loadMoreContainer) {
+                if (displayedProducts >= filteredProducts.length) {
+                    loadMoreContainer.innerHTML = `
+                        <button class="px-8 py-3 border border-gray-300 text-sm uppercase tracking-widest hover:border-black hover:bg-black hover:text-white transition-all" onclick="showLessProducts()">Show Less Products</button>
+                    `;
+                    isShowingAllProducts = true;
+                } else {
+                    loadMoreContainer.innerHTML = `
+                        <button class="px-8 py-3 border border-gray-300 text-sm uppercase tracking-widest hover:border-black hover:bg-black hover:text-white transition-all" onclick="loadMoreProducts()" id="load-more-btn">Load More Products</button>
+                    `;
+                    isShowingAllProducts = false;
+                }
+            }
+            
+            updateWishlistIcons();
+            lucide.createIcons();
+        }
+        
+        function openProductDetail(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            currentProduct = product;
+            selectedSize = 'S';
+            selectedColor = product.colors[0];
+            currentQuantity = 1;
+            
+            // Update navigation breadcrumb
+            document.getElementById('product-title-nav').textContent = product.name;
+            
+            // Set product images
+            const imagesContainer = document.getElementById('product-images');
+            imagesContainer.innerHTML = `
+                <div class="aspect-[3/4] bg-gray-100 overflow-hidden rounded-sm relative group">
+                    <img src="${product.images[0]}" alt="${product.name}" class="w-full h-full object-cover">
+                    <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-3 py-1 text-xs font-bold rounded-full shadow-sm">
+                        <i data-lucide="zoom-in" class="inline h-3 w-3 mr-1"></i> Zoom
+                    </div>
+                </div>
+                <div class="grid grid-cols-4 gap-4">
+                    ${product.images.map((img, index) => `
+                        <div class="aspect-square bg-gray-100 cursor-pointer ${index === 0 ? 'border border-black' : 'opacity-60 hover:opacity-100 transition-opacity'}" onclick="changeMainImage('${img}')">
+                            <img src="${img}" class="w-full h-full object-cover">
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            // Set product details
+            const detailsContainer = document.getElementById('product-details');
+            detailsContainer.innerHTML = `
+                <div class="flex justify-between items-start mb-2">
+                    <h1 class="font-serif text-3xl md:text-4xl text-gray-900">${product.name}</h1>
+                    <div class="flex gap-2">
+                        <button onclick="shareProduct()" class="text-gray-400 hover:text-black transition-colors">
+                            <i data-lucide="share-2" class="h-6 w-6"></i>
+                        </button>
+                        <button id="product-wishlist-btn" class="text-gray-400 hover:text-red-500 transition-colors" onclick="toggleWishlist(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+                            ${isInWishlist(productId) ? '<i data-lucide="heart" class="h-6 w-6 fill-red-500 text-red-500"></i>' : '<i data-lucide="heart" class="h-6 w-6"></i>'}
+                        </button>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 mb-6">
+                    <span class="text-2xl font-medium">₦${product.price.toFixed(2)}</span>
+                    <div class="flex items-center text-gold-500 text-sm">
+                        <i data-lucide="star" class="h-4 w-4 fill-current"></i>
+                        <i data-lucide="star" class="h-4 w-4 fill-current"></i>
+                        <i data-lucide="star" class="h-4 w-4 fill-current"></i>
+                        <i data-lucide="star" class="h-4 w-4 fill-current"></i>
+                        <i data-lucide="star-half" class="h-4 w-4 fill-current"></i>
+                        <span class="text-gray-400 ml-2">(42 reviews)</span>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-8 leading-relaxed">
+                    ${product.description || 'Premium quality fashion item.'}
+                </p>
+                <div class="mb-6">
+                    <span class="text-xs font-bold uppercase text-gray-900 mb-3 block">Color: <span class="font-normal text-gray-600" id="selected-color">${selectedColor}</span></span>
+                    <div class="flex space-x-3">
+                        ${product.colors.map((color, index) => `
+                            <button class="color-btn w-8 h-8 rounded-full ${color === 'Black' ? 'bg-black' : color === 'White' ? 'bg-white border border-gray-200' : color === 'Gold' ? 'bg-gold-400' : color === 'Red' ? 'bg-red-900' : color === 'Blue' ? 'bg-blue-900' : color === 'Navy' ? 'bg-blue-950' : color === 'Burgundy' ? 'bg-purple-900' : color === 'Silver' ? 'bg-gray-300' : color === 'Ivory' ? 'bg-amber-50 border border-gray-200' : color === 'Champagne' ? 'bg-amber-100' : color === 'Beige' ? 'bg-amber-50' : color === 'Pink' ? 'bg-pink-200' : color === 'Yellow' ? 'bg-yellow-300' : color === 'Green' ? 'bg-green-300' : 'bg-gray-400'} ${index === 0 ? 'ring-2 ring-offset-2 ring-gray-300' : 'ring-1 ring-gray-200'} focus:ring-2 focus:ring-offset-2" data-color="${color}" onclick="selectColor('${color}')"></button>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="mb-8">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold uppercase text-gray-900">Size</span>
+                        <button onclick="toggleSizeGuide()" class="text-xs text-gray-500 underline hover:text-black flex items-center gap-1">
+                            <i data-lucide="ruler" class="h-3 w-3"></i> Size Guide
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-5 gap-3" id="size-selection">
+                        <input type="radio" name="size" id="size-xs" class="hidden size-radio" ${selectedSize === 'XS' ? 'checked' : ''}>
+                        <label for="size-xs" class="size-label border border-gray-200 rounded py-3 text-center text-sm cursor-pointer hover:border-black transition-colors ${selectedSize === 'XS' ? 'bg-black text-white border-black' : ''}" data-size="XS" onclick="selectSize('XS')">XS</label>
+                        <input type="radio" name="size" id="size-s" class="hidden size-radio" ${selectedSize === 'S' ? 'checked' : ''}>
+                        <label for="size-s" class="size-label border border-gray-200 rounded py-3 text-center text-sm cursor-pointer hover:border-black transition-colors ${selectedSize === 'S' ? 'bg-black text-white border-black' : ''}" data-size="S" onclick="selectSize('S')">S</label>
+                        <input type="radio" name="size" id="size-m" class="hidden size-radio" ${selectedSize === 'M' ? 'checked' : ''}>
+                        <label for="size-m" class="size-label border border-gray-200 rounded py-3 text-center text-sm cursor-pointer hover:border-black transition-colors ${selectedSize === 'M' ? 'bg-black text-white border-black' : ''}" data-size="M" onclick="selectSize('M')">M</label>
+                        <input type="radio" name="size" id="size-l" class="hidden size-radio" ${selectedSize === 'L' ? 'checked' : ''}>
+                        <label for="size-l" class="size-label border border-gray-200 rounded py-3 text-center text-sm cursor-pointer hover:border-black transition-colors ${selectedSize === 'L' ? 'bg-black text-white border-black' : ''}" data-size="L" onclick="selectSize('L')">L</label>
+                        <input type="radio" name="size" id="size-xl" class="hidden size-radio" ${selectedSize === 'XL' ? 'checked' : ''}>
+                        <label for="size-xl" class="size-label border border-gray-200 rounded py-3 text-center text-sm cursor-pointer hover:border-black transition-colors ${selectedSize === 'XL' ? 'bg-black text-white border-black' : ''}" data-size="XL" onclick="selectSize('XL')">XL</label>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Model is 5'9" and wearing size S</p>
+                </div>
+                <div class="flex gap-4 mb-8">
+                    <div class="w-24 border border-gray-200 rounded flex items-center justify-between px-3">
+                        <button class="text-gray-400 hover:text-black" onclick="changeQuantity(-1)">-</button>
+                        <span class="text-sm font-medium" id="product-quantity">${currentQuantity}</span>
+                        <button class="text-gray-400 hover:text-black" onclick="changeQuantity(1)">+</button>
+                    </div>
+                    <button onclick="addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')}, selectedSize, selectedColor, currentQuantity)" class="flex-1 bg-black text-white py-4 text-sm font-bold uppercase tracking-widest hover:bg-gold-600 transition-colors shadow-lg">
+                        Add to Cart
+                    </button>
+                </div>
+                <div class="border-t border-gray-200 divide-y divide-gray-200">
+                    <div class="py-4">
+                        <button class="flex justify-between items-center w-full text-left text-sm font-medium">
+                            <span>Fabric & Care</span>
+                            <i data-lucide="chevron-down" class="h-4 w-4"></i>
+                        </button>
+                        <div class="mt-2 text-xs text-gray-500 leading-relaxed hidden">
+                            95% Polyester, 5% Elastane. Dry clean only. Do not bleach. Iron on low heat.
+                        </div>
+                    </div>
+                    <div class="py-4">
+                        <button class="flex justify-between items-center w-full text-left text-sm font-medium">
+                            <span>Shipping & Returns</span>
+                            <i data-lucide="chevron-down" class="h-4 w-4"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            navigateTo('product');
+            lucide.createIcons();
+        }
+        
+        function changeMainImage(src) {
+            const mainImage = document.querySelector('#product-images .aspect-\\[3\\/4\\] img');
+            if (mainImage) {
+                mainImage.src = src;
+            }
+        }
+        
+        function selectSize(size) {
+            selectedSize = size;
+            
+            // Update UI
+            document.querySelectorAll('.size-label').forEach(label => {
+                label.classList.remove('bg-black', 'text-white', 'border-black');
+                if (label.dataset.size === size) {
+                    label.classList.add('bg-black', 'text-white', 'border-black');
+                }
+            });
+            
+            // Update radio button
+            const radio = document.getElementById(`size-${size.toLowerCase()}`);
+            if (radio) radio.checked = true;
+        }
+        
+        function selectColor(color) {
+            selectedColor = color;
+            
+            // Update UI
+            document.querySelectorAll('.color-btn').forEach(btn => {
+                btn.classList.remove('ring-2', 'ring-offset-2');
+                if (btn.dataset.color === color) {
+                    btn.classList.add('ring-2', 'ring-offset-2');
+                }
+            });
+            
+            // Update color text
+            const colorSpan = document.getElementById('selected-color');
+            if (colorSpan) colorSpan.textContent = color;
+        }
+        
+        function changeQuantity(change) {
+            currentQuantity = Math.max(1, currentQuantity + change);
+            const quantityElement = document.getElementById('product-quantity');
+            if (quantityElement) quantityElement.textContent = currentQuantity;
+        }
+        
+        function filterCategory(category, element) {
+            // Update active category
+            document.querySelectorAll('#category-list li').forEach(li => {
+                li.classList.remove('active-category', 'font-medium', 'text-black');
+                li.classList.add('text-gray-600');
+            });
+            
+            document.querySelectorAll('.category-pill').forEach(btn => {
+                btn.classList.remove('active', 'bg-black', 'text-white');
+                btn.classList.add('bg-gray-100');
+            });
+            
+            if (element) {
+                if (element.classList.contains('category-pill')) {
+                    element.classList.remove('bg-gray-100');
+                    element.classList.add('bg-black', 'text-white');
+                } else {
+                    element.classList.remove('text-gray-600');
+                    element.classList.add('active-category', 'font-medium', 'text-black');
+                }
+            }
+            
+            if (category === 'all') {
+                filteredProducts = [...products];
+            } else {
+                filteredProducts = products.filter(product => product.category === category);
+            }
+            
+            displayedProducts = 6;
+            renderProducts();
+        }
+        
+        function filterByPrice(maxPrice) {
+            const priceSlider = document.getElementById('price-slider');
+            const currentPriceElement = document.getElementById('current-price');
+            
+            if (priceSlider) {
+                priceSlider.value = maxPrice;
+            }
+            
+            // Update the current price display
+            if (currentPriceElement) {
+                if (maxPrice >= 1000) {
+                    currentPriceElement.textContent = '₦1000+';
+                } else {
+                    currentPriceElement.textContent = `₦${maxPrice}`;
+                }
+            }
+            
+            filteredProducts = products.filter(product => product.price <= maxPrice);
+            displayedProducts = 6;
+            renderProducts();
+        }
+        
+        function searchProducts(query) {
+            if (!query.trim()) {
+                filteredProducts = [...products];
+            } else {
+                filteredProducts = products.filter(product => 
+                    product.name.toLowerCase().includes(query.toLowerCase()) ||
+                    product.collection.toLowerCase().includes(query.toLowerCase()) ||
+                    product.description.toLowerCase().includes(query.toLowerCase())
+                );
+            }
+            
+            displayedProducts = 6;
+            renderProducts();
+        }
+        
+        function sortProducts(type) {
+            let sortedProducts = [...filteredProducts];
+            
+            switch(type) {
+                case 'price-low':
+                    sortedProducts.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-high':
+                    sortedProducts.sort((a, b) => b.price - a.price);
+                    break;
+                case 'newest':
+                    sortedProducts.sort((a, b) => b.id - a.id);
+                    break;
+                case 'popular':
+                    sortedProducts.sort((a, b) => b.price - a.price);
+                    break;
+            }
+            
+            filteredProducts = sortedProducts;
+            renderProducts();
+        }
+        
+        function loadMoreProducts() {
+            displayedProducts += 6;
+            renderProducts();
+        }
+        
+        function showLessProducts() {
+            displayedProducts = 6;
+            renderProducts();
+        }
+        
+        function renderWishlist() {
+            const grid = document.getElementById('wishlist-grid');
+            const count = document.getElementById('wishlist-count');
+            
+            if (wishlist.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-4 text-center py-12">
+                        <i data-lucide="heart" class="h-16 w-16 text-gray-300 mx-auto mb-4"></i>
+                        <p class="text-gray-500 mb-4">Your saved items will appear here</p>
+                        <button onclick="navigateTo('shop')" class="bg-black text-white px-6 py-3 rounded-xl font-semibold">
+                            Start Shopping
+                        </button>
+                    </div>
+                `;
+                if (count) count.textContent = '0';
+                return;
+            }
+            
+            grid.innerHTML = wishlist.map(product => `
+                <div class="group relative">
+                    <div class="aspect-[3/4] bg-gray-100 overflow-hidden mb-3">
+                        <img src="${product.image}" class="w-full h-full object-cover">
+                        <button onclick="toggleWishlist(${JSON.stringify(product).replace(/"/g, '&quot;')})" class="absolute top-2 right-2 bg-white p-1.5 rounded-full text-red-500 hover:bg-gray-100">
+                            <i data-lucide="x" class="h-4 w-4"></i>
+                        </button>
+                    </div>
+                    <h3 class="text-sm font-medium">${product.name}</h3>
+                    <p class="text-sm font-semibold text-gray-900">₦${product.price.toFixed(2)}</p>
+                    <button onclick="openProductDetail('${product.id}')" class="mt-2 w-full border border-black text-xs uppercase font-bold py-2 hover:bg-black hover:text-white transition-colors">
+                        View Details
+                    </button>
+                </div>
+            `).join('');
+            
+            if (count) count.textContent = wishlist.length;
+            lucide.createIcons();
+        }
+        
+        function toggleSizeGuide() {
+            const modal = document.getElementById('size-modal');
+            const content = document.getElementById('size-modal-content');
+            
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                content.classList.remove('slide-out-left');
+                content.classList.add('slide-in-left');
+                // Switch to CM tab by default
+                switchSizeChartTab('cm');
+            } else {
+                content.classList.remove('slide-in-left');
+                content.classList.add('slide-out-left');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    content.classList.remove('slide-out-left');
+                }, 600);
+            }
+        }
+        
+        function switchSizeChartTab(tab) {
+            const cmTab = document.getElementById('cmTab');
+            const inchTab = document.getElementById('inchTab');
+            const cmChart = document.getElementById('cmChart');
+            const inchChart = document.getElementById('inchChart');
+            
+            // Update tab styles
+            cmTab.classList.remove('border-b-2', 'border-black', 'font-bold');
+            inchTab.classList.remove('border-b-2', 'border-black', 'font-bold');
+            cmTab.classList.add('text-gray-400');
+            inchTab.classList.add('text-gray-400');
+            
+            // Hide all charts
+            cmChart.classList.add('hidden');
+            inchChart.classList.add('hidden');
+            
+            // Show selected chart and update tab
+            if (tab === 'cm') {
+                cmTab.classList.remove('text-gray-400');
+                cmTab.classList.add('border-b-2', 'border-black', 'font-bold');
+                cmChart.classList.remove('hidden');
+            } else {
+                inchTab.classList.remove('text-gray-400');
+                inchTab.classList.add('border-b-2', 'border-black', 'font-bold');
+                inchChart.classList.remove('hidden');
+            }
+        }
+        
+        function navigateTo(viewId) {
+            const views = ['shop', 'product', 'cart', 'favorites'];
+            views.forEach(id => {
+                const view = document.getElementById('view-' + id);
+                if (view) {
+                    view.classList.add('hidden');
+                    view.classList.remove('active');
+                }
+            });
+            
+            const selectedView = document.getElementById('view-' + viewId);
+            if (selectedView) {
+                selectedView.classList.remove('hidden');
+                selectedView.classList.add('active');
+            }
+            
+            window.scrollTo(0, 0);
+            
+            if (viewId === 'cart') {
+                renderCart();
+            } else if (viewId === 'favorites') {
+                renderWishlist();
+            } else if (viewId === 'shop') {
+                renderProducts();
+            }
+            
+            lucide.createIcons();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initCart();
+            renderProducts();
+            updateWishlistIcons();
+            lucide.createIcons();
+            
+            // Add click handlers for accordions
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.border-t button')) {
+                    const button = e.target.closest('.border-t button');
+                    const content = button.nextElementSibling;
+                    const icon = button.querySelector('i[data-lucide="chevron-down"]');
+                    
+                    if (content && content.classList.contains('hidden')) {
+                        content.classList.remove('hidden');
+                        if (icon) {
+                            icon.setAttribute('data-lucide', 'chevron-up');
+                            lucide.createIcons();
+                        }
+                    } else if (content) {
+                        content.classList.add('hidden');
+                        if (icon) {
+                            icon.setAttribute('data-lucide', 'chevron-down');
+                            lucide.createIcons();
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
